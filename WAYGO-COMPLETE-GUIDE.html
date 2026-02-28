@@ -1,0 +1,2123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WayGo – Complete React + Node.js Build Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0d1117;
+  --surface: #161b22;
+  --surface2: #1c2128;
+  --border: #30363d;
+  --accent: #f97316;
+  --accent2: #fb923c;
+  --green: #3fb950;
+  --blue: #58a6ff;
+  --purple: #bc8cff;
+  --yellow: #e3b341;
+  --red: #f85149;
+  --text: #e6edf3;
+  --text-muted: #8b949e;
+  --code-bg: #1c2128;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  line-height: 1.6;
+}
+
+/* Sidebar nav */
+.layout { display: flex; min-height: 100vh; }
+
+.sidebar {
+  width: 260px;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  position: fixed;
+  top: 0; left: 0; bottom: 0;
+  overflow-y: auto;
+  z-index: 100;
+}
+
+.sidebar-logo {
+  padding: 20px;
+  border-bottom: 1px solid var(--border);
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+.sidebar-logo span { color: var(--accent); }
+
+.nav-section {
+  padding: 16px 12px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  margin: 2px 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--text-muted);
+  transition: all 0.15s;
+  text-decoration: none;
+}
+
+.nav-item:hover { background: var(--surface2); color: var(--text); }
+.nav-item.active { background: rgba(249,115,22,0.12); color: var(--accent); }
+.nav-item-icon { font-size: 16px; flex-shrink: 0; }
+.nav-badge {
+  margin-left: auto;
+  background: var(--accent);
+  color: white;
+  font-size: 10px;
+  padding: 2px 7px;
+  border-radius: 20px;
+  font-weight: 700;
+}
+
+/* Main content */
+.main {
+  margin-left: 260px;
+  flex: 1;
+  max-width: 900px;
+  padding: 48px 48px 80px;
+}
+
+/* Section */
+.section { display: none; }
+.section.active { display: block; }
+
+/* Hero */
+.hero-banner {
+  background: linear-gradient(135deg, rgba(249,115,22,0.15) 0%, rgba(249,115,22,0.03) 100%);
+  border: 1px solid rgba(249,115,22,0.2);
+  border-radius: 16px;
+  padding: 36px;
+  margin-bottom: 36px;
+}
+
+.hero-banner h1 {
+  font-size: 36px;
+  font-weight: 800;
+  letter-spacing: -1px;
+  margin-bottom: 12px;
+}
+
+.hero-banner h1 span { color: var(--accent); }
+
+.hero-banner p { color: var(--text-muted); font-size: 15px; max-width: 600px; line-height: 1.7; }
+
+/* Feature chips */
+.feature-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.feature-chip {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Headings */
+h2 {
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  margin-bottom: 8px;
+  margin-top: 40px;
+  padding-top: 8px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+h2:first-child { margin-top: 0; }
+
+h3 {
+  font-size: 17px;
+  font-weight: 700;
+  margin: 24px 0 12px;
+  color: var(--text);
+}
+
+p {
+  color: var(--text-muted);
+  font-size: 14.5px;
+  margin-bottom: 16px;
+  line-height: 1.75;
+}
+
+/* Step boxes */
+.step-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 24px;
+  margin-bottom: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.step-box::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  background: var(--accent);
+}
+
+.step-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.step-num {
+  width: 32px; height: 32px;
+  background: var(--accent);
+  color: white;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.step-title { font-weight: 700; font-size: 16px; }
+.step-desc { color: var(--text-muted); font-size: 13px; }
+
+/* Code blocks */
+.code-block {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  margin: 12px 0 20px;
+  overflow: hidden;
+}
+
+.code-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: rgba(255,255,255,0.03);
+  border-bottom: 1px solid var(--border);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.code-lang {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-muted);
+}
+
+.code-lang-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+
+.copy-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 11px;
+  cursor: pointer;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  transition: all 0.15s;
+}
+.copy-btn:hover { border-color: var(--accent); color: var(--accent); }
+.copy-btn.copied { border-color: var(--green); color: var(--green); }
+
+pre {
+  padding: 18px;
+  overflow-x: auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+/* Syntax highlighting */
+.kw { color: #ff7b72; }   /* keywords */
+.str { color: #a5d6ff; }  /* strings */
+.cm { color: #8b949e; font-style: italic; }  /* comments */
+.fn { color: #d2a8ff; }   /* functions */
+.num { color: #f2cc60; }  /* numbers */
+.var { color: #ffa657; }  /* variables/consts */
+.tag { color: #7ee787; }  /* JSX tags */
+.attr { color: #79c0ff; } /* attributes */
+.imp { color: #ff7b72; }  /* imports */
+
+/* File tree */
+.file-tree {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  margin: 12px 0 20px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  line-height: 2;
+}
+
+.tree-folder { color: var(--blue); font-weight: 600; }
+.tree-file { color: var(--text-muted); }
+.tree-file.js { color: var(--yellow); }
+.tree-file.jsx { color: #61dafb; }
+.tree-file.css { color: #ff79c6; }
+.tree-file.json { color: var(--green); }
+.tree-file.env { color: var(--purple); }
+
+/* Alert boxes */
+.alert {
+  border-radius: 10px;
+  padding: 14px 18px;
+  margin: 14px 0;
+  font-size: 13.5px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.alert-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+.alert-info { background: rgba(88,166,255,0.08); border: 1px solid rgba(88,166,255,0.2); }
+.alert-warn { background: rgba(227,179,65,0.08); border: 1px solid rgba(227,179,65,0.2); }
+.alert-success { background: rgba(63,185,80,0.08); border: 1px solid rgba(63,185,80,0.2); }
+.alert-tip { background: rgba(188,140,255,0.08); border: 1px solid rgba(188,140,255,0.2); }
+
+/* Table */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 12px 0 20px;
+  font-size: 13.5px;
+}
+
+th {
+  text-align: left;
+  padding: 10px 14px;
+  background: var(--surface2);
+  color: var(--text-muted);
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid var(--border);
+}
+
+td {
+  padding: 10px 14px;
+  border-bottom: 1px solid rgba(48,54,61,0.5);
+  color: var(--text-muted);
+}
+
+td:first-child { color: var(--text); font-family: 'JetBrains Mono', monospace; font-size: 13px; }
+tr:last-child td { border-bottom: none; }
+
+/* Inline code */
+code {
+  background: rgba(110,118,129,0.15);
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12.5px;
+  color: var(--accent2);
+}
+
+/* Package list */
+.pkg-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 12px 0 20px;
+}
+
+.pkg-card {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+}
+
+.pkg-name { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--yellow); font-weight: 600; margin-bottom: 4px; }
+.pkg-desc { font-size: 12px; color: var(--text-muted); }
+
+/* Progress bar */
+.progress-wrap { display: flex; align-items: center; gap: 12px; margin-bottom: 32px; }
+.progress-bar { flex: 1; height: 4px; background: var(--surface2); border-radius: 2px; overflow: hidden; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); border-radius: 2px; transition: width 0.4s ease; }
+.progress-text { font-size: 12px; color: var(--text-muted); white-space: nowrap; }
+
+/* Prev/Next */
+.nav-btns {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+}
+
+.nav-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  transition: all 0.15s;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.nav-btn:hover { border-color: var(--accent); color: var(--accent); }
+.nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+.nav-btn.primary { background: var(--accent); border-color: var(--accent); color: white; }
+.nav-btn.primary:hover { background: var(--accent2); }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+/* Mobile */
+@media(max-width:768px) {
+  .sidebar { display: none; }
+  .main { margin-left: 0; padding: 24px 20px 60px; }
+  .pkg-grid { grid-template-columns: 1fr; }
+  .hero-banner h1 { font-size: 26px; }
+}
+</style>
+</head>
+<body>
+<div class="layout">
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sidebar-logo">Way<span>Go</span> <span style="font-size:12px;color:var(--text-muted);font-weight:400">Build Guide</span></div>
+
+  <div class="nav-section">Getting Started</div>
+  <a class="nav-item active" onclick="showSection('overview')">
+    <span class="nav-item-icon">🏠</span> Overview
+  </a>
+  <a class="nav-item" onclick="showSection('prereqs')">
+    <span class="nav-item-icon">⚙️</span> Prerequisites
+  </a>
+  <a class="nav-item" onclick="showSection('structure')">
+    <span class="nav-item-icon">📁</span> Project Structure
+  </a>
+
+  <div class="nav-section">Backend (Node.js)</div>
+  <a class="nav-item" onclick="showSection('backend-setup')">
+    <span class="nav-item-icon">🔧</span> Setup & Install
+  </a>
+  <a class="nav-item" onclick="showSection('backend-server')">
+    <span class="nav-item-icon">🖥️</span> server.js
+  </a>
+  <a class="nav-item" onclick="showSection('backend-routes')">
+    <span class="nav-item-icon">🛣️</span> API Routes
+  </a>
+  <a class="nav-item" onclick="showSection('backend-env')">
+    <span class="nav-item-icon">🔑</span> .env Config
+  </a>
+
+  <div class="nav-section">Frontend (React)</div>
+  <a class="nav-item" onclick="showSection('frontend-setup')">
+    <span class="nav-item-icon">⚛️</span> Setup & Install
+  </a>
+  <a class="nav-item" onclick="showSection('frontend-app')">
+    <span class="nav-item-icon">📱</span> App.jsx
+  </a>
+  <a class="nav-item" onclick="showSection('frontend-context')">
+    <span class="nav-item-icon">🧠</span> TravelContext.jsx
+  </a>
+  <a class="nav-item" onclick="showSection('frontend-steps')">
+    <span class="nav-item-icon">📋</span> Step Components <span class="nav-badge">5</span>
+  </a>
+  <a class="nav-item" onclick="showSection('frontend-css')">
+    <span class="nav-item-icon">🎨</span> Global CSS
+  </a>
+
+  <div class="nav-section">Run & Deploy</div>
+  <a class="nav-item" onclick="showSection('run')">
+    <span class="nav-item-icon">🚀</span> Run the App
+  </a>
+  <a class="nav-item" onclick="showSection('features')">
+    <span class="nav-item-icon">✨</span> Feature Summary
+  </a>
+</nav>
+
+<!-- MAIN -->
+<main class="main">
+
+<!-- ============ OVERVIEW ============ -->
+<section class="section active" id="sec-overview">
+  <div class="hero-banner">
+    <h1>Build <span>WayGo</span> — Full-Stack Travel Planner</h1>
+    <p>A complete React.js frontend + Node.js/Express backend travel planner with cost calculator, transport modes, nearby places, and Google Maps navigation. Follow every step in order.</p>
+    <div class="feature-chips">
+      <div class="feature-chip">⚛️ React 18</div>
+      <div class="feature-chip">🟢 Node.js + Express</div>
+      <div class="feature-chip">🗺️ Google Maps API</div>
+      <div class="feature-chip">⛽ Fuel Calculator</div>
+      <div class="feature-chip">🚆 Train/Bus/Flight Fares</div>
+      <div class="feature-chip">🏨 Hotels & Places</div>
+      <div class="feature-chip">📍 Live Navigation</div>
+    </div>
+  </div>
+
+  <h2>📐 What You'll Build</h2>
+  <p>A 5-step travel planner that works like this:</p>
+
+  <table>
+    <tr><th>Step</th><th>Component</th><th>What it does</th></tr>
+    <tr><td>Step 1</td><td>RouteForm</td><td>Enter From/To, distance, travelers, dates</td></tr>
+    <tr><td>Step 2</td><td>TransportPicker</td><td>Choose Car/Bike (mileage calc) or Bus/Train/Flight/Cab (fares)</td></tr>
+    <tr><td>Step 3</td><td>CostBreakdown</td><td>Itemised cost: fuel, toll, food, parking, misc</td></tr>
+    <tr><td>Step 4</td><td>PlacesExplorer</td><td>Hotels, restaurants, petrol stations via Google Places API</td></tr>
+    <tr><td>Step 5</td><td>JourneySummary</td><td>Full summary + launch Google Maps navigation</td></tr>
+  </table>
+
+  <div class="alert alert-info">
+    <span class="alert-icon">💡</span>
+    <div>This guide gives you <strong>every single file and every line of code</strong>. Just follow the steps in order: Prerequisites → Project Structure → Backend → Frontend → Run.</div>
+  </div>
+
+  <div class="nav-btns">
+    <button class="nav-btn" disabled>← Previous</button>
+    <button class="nav-btn primary" onclick="showSection('prereqs')">Prerequisites →</button>
+  </div>
+</section>
+
+<!-- ============ PREREQS ============ -->
+<section class="section" id="sec-prereqs">
+  <h2>⚙️ Prerequisites</h2>
+  <p>Install these tools before starting. Click the links to download.</p>
+
+  <div class="step-box">
+    <div class="step-header">
+      <div class="step-num">1</div>
+      <div><div class="step-title">Install Node.js (v18 or higher)</div>
+      <div class="step-desc">Download from nodejs.org — this also installs npm automatically</div></div>
+    </div>
+    <div class="code-block">
+      <div class="code-header"><div class="code-lang"><div class="code-lang-dot"></div>Terminal / CMD</div><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+      <pre><span class="cm"># Check if already installed</span>
+node --version    <span class="cm"># should show v18.x.x or higher</span>
+npm --version     <span class="cm"># should show 9.x.x or higher</span></pre>
+    </div>
+  </div>
+
+  <div class="step-box">
+    <div class="step-header">
+      <div class="step-num">2</div>
+      <div><div class="step-title">Install VS Code</div>
+      <div class="step-desc">Download from code.visualstudio.com</div></div>
+    </div>
+    <p>Install these VS Code extensions (optional but helpful):</p>
+    <div class="code-block">
+      <div class="code-header"><div class="code-lang"><div class="code-lang-dot"></div>VS Code Extensions</div></div>
+      <pre>ES7+ React/Redux/React-Native snippets
+Prettier - Code formatter
+Auto Rename Tag
+Tailwind CSS IntelliSense
+Thunder Client (for API testing)</pre>
+    </div>
+  </div>
+
+  <div class="step-box">
+    <div class="step-header">
+      <div class="step-num">3</div>
+      <div><div class="step-title">Get a Google Maps API Key (Free)</div>
+      <div class="step-desc">Required for Places search and directions</div></div>
+    </div>
+    <p>Go to: <code>console.cloud.google.com</code> → Create Project → Enable these APIs:</p>
+    <div class="code-block">
+      <div class="code-header"><div class="code-lang"><div class="code-lang-dot"></div>APIs to Enable</div></div>
+      <pre>✅ Maps JavaScript API
+✅ Places API
+✅ Directions API
+✅ Geocoding API</pre>
+    </div>
+    <div class="alert alert-warn">
+      <span class="alert-icon">⚠️</span>
+      <div>Google gives <strong>$200 free credits/month</strong> — more than enough for development. Add a billing account but you won't be charged unless you exceed the free tier.</div>
+    </div>
+  </div>
+
+  <div class="nav-btns">
+    <button class="nav-btn" onclick="showSection('overview')">← Overview</button>
+    <button class="nav-btn primary" onclick="showSection('structure')">Project Structure →</button>
+  </div>
+</section>
+
+<!-- ============ STRUCTURE ============ -->
+<section class="section" id="sec-structure">
+  <h2>📁 Project Structure</h2>
+  <p>This is the complete folder and file structure you'll create. Don't create files manually — each section gives you the exact commands.</p>
+
+  <div class="file-tree">
+<span class="tree-folder">waygo/</span>
+├── <span class="tree-folder">backend/</span>                    ← Node.js + Express API
+│   ├── <span class="tree-file json">package.json</span>
+│   ├── <span class="tree-file env">.env</span>                  ← API keys (never commit!)
+│   ├── <span class="tree-file js">server.js</span>              ← Main entry point
+│   └── <span class="tree-folder">routes/</span>
+│       ├── <span class="tree-file js">places.js</span>          ← Google Places proxy
+│       ├── <span class="tree-file js">fares.js</span>           ← Transport fare calc
+│       └── <span class="tree-file js">fuel.js</span>            ← Fuel cost calc
+│
+└── <span class="tree-folder">frontend/</span>                   ← React App (Vite)
+    ├── <span class="tree-file json">package.json</span>
+    ├── <span class="tree-file env">.env</span>                  ← Frontend env vars
+    ├── <span class="tree-file js">vite.config.js</span>
+    ├── <span class="tree-folder">public/</span>
+    └── <span class="tree-folder">src/</span>
+        ├── <span class="tree-file jsx">App.jsx</span>            ← Root component + router
+        ├── <span class="tree-file css">index.css</span>          ← Global styles
+        ├── <span class="tree-folder">context/</span>
+        │   └── <span class="tree-file jsx">TravelContext.jsx</span>  ← Global state
+        ├── <span class="tree-folder">components/</span>
+        │   ├── <span class="tree-file jsx">Header.jsx</span>
+        │   ├── <span class="tree-file jsx">StepIndicator.jsx</span>
+        │   └── <span class="tree-file jsx">PlaceCard.jsx</span>
+        └── <span class="tree-folder">pages/</span>
+            ├── <span class="tree-file jsx">Step1_Route.jsx</span>
+            ├── <span class="tree-file jsx">Step2_Transport.jsx</span>
+            ├── <span class="tree-file jsx">Step3_Costs.jsx</span>
+            ├── <span class="tree-file jsx">Step4_Places.jsx</span>
+            └── <span class="tree-file jsx">Step5_Summary.jsx</span>
+  </div>
+
+  <div class="alert alert-success">
+    <span class="alert-icon">✅</span>
+    <div>Create the root <code>waygo/</code> folder on your Desktop or Documents. Then open it in VS Code: <strong>File → Open Folder → select waygo</strong></div>
+  </div>
+
+  <div class="nav-btns">
+    <button class="nav-btn" onclick="showSection('prereqs')">← Prerequisites</button>
+    <button class="nav-btn primary" onclick="showSection('backend-setup')">Backend Setup →</button>
+  </div>
+</section>
+
+<!-- ============ BACKEND SETUP ============ -->
+<section class="section" id="sec-backend-setup">
+  <h2>🔧 Backend — Setup & Install</h2>
+  <p>Open a terminal in VS Code (<code>Ctrl+`</code>) and run these commands one by one:</p>
+
+  <div class="step-box">
+    <div class="step-header"><div class="step-num">1</div><div><div class="step-title">Create the backend folder and initialize</div></div></div>
+    <div class="code-block">
+      <div class="code-header"><div class="code-lang"><div class="code-lang-dot"></div>Terminal</div><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+      <pre>mkdir backend
+cd backend
+npm init -y</pre>
+    </div>
+  </div>
+
+  <div class="step-box">
+    <div class="step-header"><div class="step-num">2</div><div><div class="step-title">Install backend dependencies</div></div></div>
+    <div class="code-block">
+      <div class="code-header"><div class="code-lang"><div class="code-lang-dot"></div>Terminal</div><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+      <pre>npm install express cors dotenv axios node-fetch</pre>
+    </div>
+    <div class="code-block">
+      <div class="code-header"><div class="code-lang"><div class="code-lang-dot"></div>Dev dependency</div><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+      <pre>npm install --save-dev nodemon</pre>
+    </div>
+  </div>
+
+  <h3>📦 What each package does</h3>
+  <div class="pkg-grid">
+    <div class="pkg-card"><div class="pkg-name">express</div><div class="pkg-desc">Web framework for Node.js — handles routes and HTTP</div></div>
+    <div class="pkg-card"><div class="pkg-name">cors</div><div class="pkg-desc">Allows React (port 5173) to call Node (port 5000)</div></div>
+    <div class="pkg-card"><div class="pkg-name">dotenv</div><div class="pkg-desc">Loads .env file — keeps API keys secret</div></div>
+    <div class="pkg-card"><div class="pkg-name">axios</div><div class="pkg-desc">Makes HTTP calls to Google APIs from the server</div></div>
+    <div class="pkg-card"><div class="pkg-name">nodemon</div><div class="pkg-desc">Auto-restarts server when you change files</div></div>
+  </div>
+
+  <div class="step-box">
+    <div class="step-header"><div class="step-num">3</div><div><div class="step-title">Update package.json scripts</div><div class="step-desc">Open backend/package.json and replace the scripts section</div></div></div>
+    <div class="code-block">
+      <div class="code-header"><div class="code-lang"><div class="code-lang-dot" style="background:var(--green)"></div>backend/package.json</div><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+      <pre>{
+  <span class="str">"name"</span>: <span class="str">"waygo-backend"</span>,
+  <span class="str">"version"</span>: <span class="str">"1.0.0"</span>,
+  <span class="str">"description"</span>: <span class="str">"WayGo Travel Planner API"</span>,
+  <span class="str">"main"</span>: <span class="str">"server.js"</span>,
+  <span class="str">"scripts"</span>: {
+    <span class="str">"start"</span>: <span class="str">"node server.js"</span>,
+    <span class="str">"dev"</span>: <span class="str">"nodemon server.js"</span>
+  },
+  <span class="str">"type"</span>: <span class="str">"commonjs"</span>
+}</pre>
+    </div>
+  </div>
+
+  <div class="nav-btns">
+    <button class="nav-btn" onclick="showSection('structure')">← Project Structure</button>
+    <button class="nav-btn primary" onclick="showSection('backend-server')">server.js →</button>
+  </div>
+</section>
+
+<!-- ============ SERVER.JS ============ -->
+<section class="section" id="sec-backend-server">
+  <h2>🖥️ backend/server.js</h2>
+  <p>Create a new file called <code>server.js</code> inside the <code>backend/</code> folder. Paste this entire code:</p>
+
+  <div class="code-block">
+    <div class="code-header"><div class="code-lang"><div class="code-lang-dot"></div>backend/server.js</div><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <pre><span class="kw">const</span> <span class="var">express</span> = <span class="fn">require</span>(<span class="str">'express'</span>);
+<span class="kw">const</span> <span class="var">cors</span> = <span class="fn">require</span>(<span class="str">'cors'</span>);
+<span class="kw">const</span> <span class="var">dotenv</span> = <span class="fn">require</span>(<span class="str">'dotenv'</span>);
+<span class="kw">const</span> <span class="var">placesRouter</span> = <span class="fn">require</span>(<span class="str">'./routes/places'</span>);
+<span class="kw">const</span> <span class="var">faresRouter</span> = <span class="fn">require</span>(<span class="str">'./routes/fares'</span>);
+<span class="kw">const</span> <span class="var">fuelRouter</span> = <span class="fn">require</span>(<span class="str">'./routes/fuel'</span>);
+
+<span class="var">dotenv</span>.<span class="fn">config</span>();
+
+<span class="kw">const</span> <span class="var">app</span> = <span class="fn">express</span>();
+<span class="kw">const</span> <span class="var">PORT</span> = <span class="var">process</span>.env.<span class="var">PORT</span> || <span class="num">5000</span>;
+
+<span class="cm">// Middleware</span>
+<span class="var">app</span>.<span class="fn">use</span>(<span class="fn">cors</span>({
+  <span class="var">origin</span>: [<span class="str">'http://localhost:5173'</span>, <span class="str">'http://localhost:3000'</span>],
+  <span class="var">credentials</span>: <span class="kw">true</span>
+}));
+<span class="var">app</span>.<span class="fn">use</span>(<span class="var">express</span>.<span class="fn">json</span>());
+<span class="var">app</span>.<span class="fn">use</span>(<span class="var">express</span>.<span class="fn">urlencoded</span>({ <span class="var">extended</span>: <span class="kw">true</span> }));
+
+<span class="cm">// Routes</span>
+<span class="var">app</span>.<span class="fn">use</span>(<span class="str">'/api/places'</span>, <span class="var">placesRouter</span>);
+<span class="var">app</span>.<span class="fn">use</span>(<span class="str">'/api/fares'</span>, <span class="var">faresRouter</span>);
+<span class="var">app</span>.<span class="fn">use</span>(<span class="str">'/api/fuel'</span>, <span class="var">fuelRouter</span>);
+
+<span class="cm">// Health check</span>
+<span class="var">app</span>.<span class="fn">get</span>(<span class="str">'/'</span>, (<span class="var">req</span>, <span class="var">res</span>) => {
+  <span class="var">res</span>.<span class="fn">json</span>({
+    <span class="var">message</span>: <span class="str">'🚀 WayGo API is running!'</span>,
+    <span class="var">version</span>: <span class="str">'1.0.0'</span>,
+    <span class="var">endpoints</span>: [
+      <span class="str">'/api/places/nearby'</span>,
+      <span class="str">'/api/fares/estimate'</span>,
+      <span class="str">'/api/fuel/calculate'</span>
+    ]
+  });
+});
+
+<span class="cm">// Error handler</span>
+<span class="var">app</span>.<span class="fn">use</span>((<span class="var">err</span>, <span class="var">req</span>, <span class="var">res</span>, <span class="var">next</span>) => {
+  <span class="var">console</span>.<span class="fn">error</span>(<span class="var">err</span>.stack);
+  <span class="var">res</span>.<span class="fn">status</span>(<span class="num">500</span>).<span class="fn">json</span>({ <span class="var">error</span>: <span class="str">'Something went wrong!'</span> });
+});
+
+<span class="var">app</span>.<span class="fn">listen</span>(<span class="var">PORT</span>, () => {
+  <span class="var">console</span>.<span class="fn">log</span>(<span class="str">`✅ WayGo server running on http://localhost:${PORT}`</span>);
+});</pre>
+  </div>
+
+  <div class="nav-btns">
+    <button class="nav-btn" onclick="showSection('backend-setup')">← Backend Setup</button>
+    <button class="nav-btn primary" onclick="showSection('backend-routes')">API Routes →</button>
+  </div>
+</section>
+
+<!-- ============ BACKEND ROUTES ============ -->
+<section class="section" id="sec-backend-routes">
+  <h2>🛣️ API Routes (3 files)</h2>
+  <p>Create a <code>routes/</code> folder inside <code>backend/</code>. Then create these 3 files:</p>
+
+  <h3>📄 routes/fuel.js — Fuel cost calculator</h3>
+  <div class="code-block">
+    <div class="code-header"><div class="code-lang"><div class="code-lang-dot"></div>backend/routes/fuel.js</div><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <pre><span class="kw">const</span> <span class="var">express</span> = <span class="fn">require</span>(<span class="str">'express'</span>);
+<span class="kw">const</span> <span class="var">router</span> = <span class="var">express</span>.<span class="fn">Router</span>();
+
+<span class="cm">// POST /api/fuel/calculate</span>
+<span class="var">router</span>.<span class="fn">post</span>(<span class="str">'/calculate'</span>, (<span class="var">req</span>, <span class="var">res</span>) => {
+  <span class="kw">const</span> {
+    <span class="var">distance</span>,        <span class="cm">// km</span>
+    <span class="var">mileage</span>,         <span class="cm">// km/L</span>
+    <span class="var">fuelPrice</span>,       <span class="cm">// ₹/L</span>
+    <span class="var">tollCharges</span>,     <span class="cm">// ₹</span>
+    <span class="var">travelers</span>,       <span class="cm">// number</span>
+    <span class="var">vehicleType</span>      <span class="cm">// 'car' | 'bike'</span>
+  } = <span class="var">req</span>.body;
+
+  <span class="cm">// Validate</span>
+  <span class="kw">if</span> (!<span class="var">distance</span> || !<span class="var">mileage</span> || !<span class="var">fuelPrice</span>) {
+    <span class="kw">return</span> <span class="var">res</span>.<span class="fn">status</span>(<span class="num">400</span>).<span class="fn">json</span>({ <span class="var">error</span>: <span class="str">'distance, mileage, fuelPrice are required'</span> });
+  }
+
+  <span class="kw">const</span> <span class="var">litersNeeded</span> = <span class="var">distance</span> / <span class="var">mileage</span>;
+  <span class="kw">const</span> <span class="var">fuelCost</span> = <span class="fn">Math.round</span>(<span class="var">litersNeeded</span> * <span class="var">fuelPrice</span>);
+  <span class="kw">const</span> <span class="var">toll</span> = <span class="var">tollCharges</span> || <span class="num">0</span>;
+
+  <span class="cm">// Estimated stops (every 150km)</span>
+  <span class="kw">const</span> <span class="var">stops</span> = <span class="fn">Math.floor</span>(<span class="var">distance</span> / <span class="num">150</span>);
+  <span class="kw">const</span> <span class="var">foodCost</span> = <span class="fn">Math.round</span>(<span class="var">stops</span> * <span class="var">travelers</span> * <span class="num">180</span>);
+  <span class="kw">const</span> <span class="var">parkingCost</span> = <span class="fn">Math.round</span>(<span class="var">stops</span> * <span class="num">80</span>);
+  <span class="kw">const</span> <span class="var">miscCost</span> = <span class="fn">Math.round</span>((<span class="var">fuelCost</span> + <span class="var">toll</span>) * <span class="num">0.08</span>);
+  <span class="kw">const</span> <span class="var">totalCost</span> = <span class="var">fuelCost</span> + <span class="var">toll</span> + <span class="var">foodCost</span> + <span class="var">parkingCost</span> + <span class="var">miscCost</span>;
+
+  <span class="var">res</span>.<span class="fn">json</span>({
+    <span class="var">success</span>: <span class="kw">true</span>,
+    <span class="var">breakdown</span>: {
+      <span class="var">litersNeeded</span>: +<span class="var">litersNeeded</span>.<span class="fn">toFixed</span>(<span class="num">1</span>),
+      <span class="var">fuelCost</span>,
+      <span class="var">tollCharges</span>: <span class="var">toll</span>,
+      <span class="var">foodCost</span>,
+      <span class="var">parkingCost</span>,
+      <span class="var">miscCost</span>,
+      <span class="var">totalCost</span>,
+      <span class="var">perPersonCost</span>: <span class="fn">Math.round</span>(<span class="var">totalCost</span> / (<span class="var">travelers</span> || <span class="num">1</span>))
+    }
+  });
+});
+
+<span class="var">module</span>.exports = <span class="var">router</span>;</pre>
+  </div>
+
+  <h3>📄 routes/fares.js — Public transport fares</h3>
+  <div class="code-block">
+    <div class="code-header"><div class="code-lang"><div class="code-lang-dot"></div>backend/routes/fares.js</div><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <pre><span class="kw">const</span> <span class="var">express</span> = <span class="fn">require</span>(<span class="str">'express'</span>);
+<span class="kw">const</span> <span class="var">router</span> = <span class="var">express</span>.<span class="fn">Router</span>();
+
+<span class="cm">// Rate per km (₹) for each class</span>
+<span class="kw">const</span> <span class="var">FARE_RATES</span> = {
+  bus: {
+    general:  { <span class="var">rate</span>: <span class="num">0.55</span>, <span class="var">label</span>: <span class="str">'State Bus - General'</span>, <span class="var">icon</span>: <span class="str">'🚌'</span> },
+    express:  { <span class="var">rate</span>: <span class="num">0.85</span>, <span class="var">label</span>: <span class="str">'State Bus - Express'</span>, <span class="var">icon</span>: <span class="str">'🚌'</span> },
+    volvo:    { <span class="var">rate</span>: <span class="num">1.40</span>, <span class="var">label</span>: <span class="str">'Volvo AC Bus'</span>, <span class="var">icon</span>: <span class="str">'🚌'</span> }
+  },
+  train: {
+    sl:   { <span class="var">rate</span>: <span class="num">0.50</span>, <span class="var">label</span>: <span class="str">'Sleeper Class (SL)'</span>, <span class="var">icon</span>: <span class="str">'🚆'</span> },
+    threeA: { <span class="var">rate</span>: <span class="num">1.60</span>, <span class="var">label</span>: <span class="str">'AC 3-Tier (3A)'</span>, <span class="var">icon</span>: <span class="str">'🚆'</span> },
+    twoA: { <span class="var">rate</span>: <span class="num">2.40</span>, <span class="var">label</span>: <span class="str">'AC 2-Tier (2A)'</span>, <span class="var">icon</span>: <span class="str">'🚆'</span> },
+    cc:   { <span class="var">rate</span>: <span class="num">1.30</span>, <span class="var">label</span>: <span class="str">'AC Chair Car (CC)'</span>, <span class="var">icon</span>: <span class="str">'🚆'</span> }
+  },
+  flight: {
+    economy:  { <span class="var">rate</span>: <span class="num">4.50</span>, <span class="var">label</span>: <span class="str">'Economy Class'</span>, <span class="var">icon</span>: <span class="str">'✈️'</span> },
+    business: { <span class="var">rate</span>: <span class="num">14.00</span>, <span class="var">label</span>: <span class="str">'Business Class'</span>, <span class="var">icon</span>: <span class="str">'✈️'</span> }
+  },
+  cab: {
+    hatchback: { <span class="var">rate</span>: <span class="num">12</span>, <span class="var">label</span>: <span class="str">'Hatchback (Ola Mini)'</span>, <span class="var">icon</span>: <span class="str">'🚕'</span> },
+    sedan:     { <span class="var">rate</span>: <span class="num">16</span>, <span class="var">label</span>: <span class="str">'Sedan (Ola Prime)'</span>, <span class="var">icon</span>: <span class="str">'🚕'</span> },
+    suv:       { <span class="var">rate</span>: <span class="num">22</span>, <span class="var">label</span>: <span class="str">'SUV (Ola SUV)'</span>, <span class="var">icon</span>: <span class="str">'🚕'</span> }
+  }
+};
+
+<span class="cm">// GET /api/fares/estimate?type=train&distance=320&travelers=2</span>
+<span class="var">router</span>.<span class="fn">get</span>(<span class="str">'/estimate'</span>, (<span class="var">req</span>, <span class="var">res</span>) => {
+  <span class="kw">const</span> { <span class="var">type</span>, <span class="var">distance</span>, <span class="var">travelers</span> = <span class="num">1</span> } = <span class="var">req</span>.query;
+
+  <span class="kw">if</span> (!<span class="var">FARE_RATES</span>[<span class="var">type</span>]) {
+    <span class="kw">return</span> <span class="var">res</span>.<span class="fn">status</span>(<span class="num">400</span>).<span class="fn">json</span>({ <span class="var">error</span>: <span class="str">'Invalid transport type'</span> });
+  }
+
+  <span class="kw">const</span> <span class="var">dist</span> = <span class="fn">parseFloat</span>(<span class="var">distance</span>);
+  <span class="kw">const</span> <span class="var">trav</span> = <span class="fn">parseInt</span>(<span class="var">travelers</span>);
+  <span class="kw">const</span> <span class="var">classes</span> = <span class="var">FARE_RATES</span>[<span class="var">type</span>];
+
+  <span class="kw">const</span> <span class="var">fares</span> = <span class="fn">Object.entries</span>(<span class="var">classes</span>).<span class="fn">map</span>(([<span class="var">key</span>, <span class="var">data</span>]) => ({
+    <span class="var">key</span>,
+    <span class="var">label</span>: <span class="var">data</span>.label,
+    <span class="var">icon</span>: <span class="var">data</span>.icon,
+    <span class="var">perPersonFare</span>: <span class="fn">Math.round</span>(<span class="var">dist</span> * <span class="var">data</span>.rate),
+    <span class="var">totalFare</span>: <span class="fn">Math.round</span>(<span class="var">dist</span> * <span class="var">data</span>.rate * <span class="var">trav</span>),
+    <span class="var">ratePerKm</span>: <span class="var">data</span>.rate
+  }));
+
+  <span class="var">res</span>.<span class="fn">json</span>({ <span class="var">success</span>: <span class="kw">true</span>, <span class="var">type</span>, <span class="var">distance</span>: <span class="var">dist</span>, <span class="var">travelers</span>: <span class="var">trav</span>, <span class="var">fares</span> });
+});
+
+<span class="var">module</span>.exports = <span class="var">router</span>;</pre>
+  </div>
+
+  <h3>📄 routes/places.js — Google Places proxy</h3>
+  <div class="code-block">
+    <div class="code-header"><div class="code-lang"><div class="code-lang-dot"></div>backend/routes/places.js</div><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <pre><span class="kw">const</span> <span class="var">express</span> = <span class="fn">require</span>(<span class="str">'express'</span>);
+<span class="kw">const</span> <span class="var">axios</span> = <span class="fn">require</span>(<span class="str">'axios'</span>);
+<span class="kw">const</span> <span class="var">router</span> = <span class="var">express</span>.<span class="fn">Router</span>();
+
+<span class="kw">const</span> <span class="var">GOOGLE_API_KEY</span> = <span class="var">process</span>.env.<span class="var">GOOGLE_MAPS_API_KEY</span>;
+<span class="kw">const</span> <span class="var">PLACES_BASE</span> = <span class="str">'https://maps.googleapis.com/maps/api/place'</span>;
+
+<span class="cm">// GET /api/places/nearby?location=28.6139,77.2090&type=hotel&radius=5000</span>
+<span class="var">router</span>.<span class="fn">get</span>(<span class="str">'/nearby'</span>, <span class="kw">async</span> (<span class="var">req</span>, <span class="var">res</span>) => {
+  <span class="kw">try</span> {
+    <span class="kw">const</span> { <span class="var">location</span>, <span class="var">type</span> = <span class="str">'lodging'</span>, <span class="var">radius</span> = <span class="num">5000</span>, <span class="var">keyword</span> } = <span class="var">req</span>.query;
+
+    <span class="kw">const</span> <span class="var">params</span> = {
+      <span class="var">location</span>, <span class="var">radius</span>, <span class="var">type</span>,
+      <span class="var">key</span>: <span class="var">GOOGLE_API_KEY</span>,
+      ...(keyword && { keyword })
+    };
+
+    <span class="kw">const</span> { <span class="var">data</span> } = <span class="kw">await</span> <span class="var">axios</span>.<span class="fn">get</span>(<span class="str">`${PLACES_BASE}/nearbysearch/json`</span>, { params });
+
+    <span class="kw">const</span> <span class="var">places</span> = (<span class="var">data</span>.results || []).<span class="fn">slice</span>(<span class="num">0</span>, <span class="num">8</span>).<span class="fn">map</span>(<span class="var">p</span> => ({
+      <span class="var">id</span>: <span class="var">p</span>.place_id,
+      <span class="var">name</span>: <span class="var">p</span>.name,
+      <span class="var">address</span>: <span class="var">p</span>.vicinity,
+      <span class="var">rating</span>: <span class="var">p</span>.rating || <span class="num">0</span>,
+      <span class="var">ratingCount</span>: <span class="var">p</span>.user_ratings_total || <span class="num">0</span>,
+      <span class="var">isOpen</span>: <span class="var">p</span>.opening_hours?.open_now,
+      <span class="var">priceLevel</span>: <span class="var">p</span>.price_level,
+      <span class="var">photo</span>: <span class="var">p</span>.photos?.[<span class="num">0</span>]?.photo_reference
+        ? <span class="str">`${PLACES_BASE}/photo?maxwidth=400&photoreference=${p.photos[0].photo_reference}&key=${GOOGLE_API_KEY}`</span>
+        : <span class="kw">null</span>,
+      <span class="var">lat</span>: <span class="var">p</span>.geometry.location.lat,
+      <span class="var">lng</span>: <span class="var">p</span>.geometry.location.lng,
+      <span class="var">types</span>: <span class="var">p</span>.types
+    }));
+
+    <span class="var">res</span>.<span class="fn">json</span>({ <span class="var">success</span>: <span class="kw">true</span>, <span class="var">places</span>, <span class="var">total</span>: <span class="var">places</span>.length });
+  } <span class="kw">catch</span> (<span class="var">err</span>) {
+    <span class="var">console</span>.<span class="fn">error</span>(<span class="str">'Places error:'</span>, <span class="var">err</span>.message);
+    <span class="var">res</span>.<span class="fn">status</span>(<span class="num">500</span>).<span class="fn">json</span>({ <span class="var">error</span>: <span class="str">'Failed to fetch places'</span>, <span class="var">details</span>: <span class="var">err</span>.message });
+  }
+});
+
+<span class="cm">// GET /api/places/geocode?address=Delhi</span>
+<span class="var">router</span>.<span class="fn">get</span>(<span class="str">'/geocode'</span>, <span class="kw">async</span> (<span class="var">req</span>, <span class="var">res</span>) => {
+  <span class="kw">try</span> {
+    <span class="kw">const</span> { <span class="var">address</span> } = <span class="var">req</span>.query;
+    <span class="kw">const</span> { <span class="var">data</span> } = <span class="kw">await</span> <span class="var">axios</span>.<span class="fn">get</span>(
+      <span class="str">`https://maps.googleapis.com/maps/api/geocode/json`</span>,
+      { <span class="var">params</span>: { <span class="var">address</span>, <span class="var">key</span>: <span class="var">GOOGLE_API_KEY</span> } }
+    );
+    <span class="kw">if</span> (<span class="var">data</span>.results?.[<span class="num">0</span>]) {
+      <span class="kw">const</span> { <span class="var">lat</span>, <span class="var">lng</span> } = <span class="var">data</span>.results[<span class="num">0</span>].geometry.location;
+      <span class="var">res</span>.<span class="fn">json</span>({ <span class="var">success</span>: <span class="kw">true</span>, <span class="var">lat</span>, <span class="var">lng</span>, <span class="var">formattedAddress</span>: <span class="var">data</span>.results[<span class="num">0</span>].formatted_address });
+    } <span class="kw">else</span> {
+      <span class="var">res</span>.<span class="fn">status</span>(<span class="num">404</span>).<span class="fn">json</span>({ <span class="var">error</span>: <span class="str">'Location not found'</span> });
+    }
+  } <span class="kw">catch</span> (<span class="var">err</span>) {
+    <span class="var">res</span>.<span class="fn">status</span>(<span class="num">500</span>).<span class="fn">json</span>({ <span class="var">error</span>: <span class="var">err</span>.message });
+  }
+});
+
+<span class="var">module</span>.exports = <span class="var">router</span>;</pre>
+  </div>
+
+  <div class="nav-btns">
+    <button class="nav-btn" onclick="showSection('backend-server')">← server.js</button>
+    <button class="nav-btn primary" onclick="showSection('backend-env'">.env Config →</button>
+  </div>
+</section>
+
+<!-- ============ .ENV ============ -->
+<section class="section" id="sec-backend-env">
+  <h2>🔑 Environment Variables</h2>
+  <p>Create a <code>.env</code> file inside <code>backend/</code>. This keeps your API keys secret and out of your code.</p>
+
+  <div class="code-block">
+    <div class="code-header"><div class="code-lang"><div class="code-lang-dot" style="background:var(--purple)"></div>backend/.env</div><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <pre><span class="cm"># Server config</span>
+PORT=5000
+
+<span class="cm"># Google Maps API Key</span>
+<span class="cm"># Get yours at: console.cloud.google.com</span>
+GOOGLE_MAPS_API_KEY=YOUR_GOOGLE_MAPS_API_KEY_HERE
+
+<span class="cm"># Optional: Fuel price defaults (₹)</span>
+DEFAULT_PETROL_PRICE=96
+DEFAULT_DIESEL_PRICE=89</pre>
+  </div>
+
+  <div class="alert alert-warn">
+    <span class="alert-icon">🔐</span>
+    <div>Replace <code>YOUR_GOOGLE_MAPS_API_KEY_HERE</code> with your actual key. Also create a <code>.gitignore</code> file in <code>backend/</code> and add <code>.env</code> to it so you never accidentally push your key to GitHub!</div>
+  </div>
+
+  <div class="code-block">
+    <div class="code-header"><div class="code-lang"><div class="code-lang-dot"></div>backend/.gitignore</div><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <pre>node_modules/
+.env
+.env.local</pre>
+  </div>
+
+  <h3>✅ Test the backend now</h3>
+  <p>In the terminal, from inside the <code>backend/</code> folder:</p>
+  <div class="code-block">
+    <div class="code-header"><div class="code-lang"><div class="code-lang-dot"></div>Terminal</div><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <pre>npm run dev
+
+<span class="cm"># You should see:</span>
+<span class="cm"># ✅ WayGo server running on http://localhost:5000</span>
+
+<span class="cm"># Test it in your browser or Thunder Client:</span>
+<span class="cm"># GET http://localhost:5000/</span>
+<span class="cm"># GET http://localhost:5000/api/fares/estimate?type=train&distance=320&travelers=2</span></pre>
+  </div>
+
+  <div class="nav-btns">
+    <button class="nav-btn" onclick="showSection('backend-routes')">← API Routes</button>
+    <button class="nav-btn primary" onclick="showSection('frontend-setup')">Frontend Setup →</button>
+  </div>
+</section>
+
+<!-- ============ FRONTEND SETUP ============ -->
+<section class="section" id="sec-frontend-setup">
+  <h2>⚛️ Frontend — React Setup (Vite)</h2>
+  <p>Open a <strong>new terminal</strong> (keep the backend terminal running). Navigate back to the <code>waygo/</code> root folder:</p>
+
+  <div class="step-box">
+    <div class="step-header"><div class="step-num">1</div><div><div class="step-title">Create React App with Vite</div></div></div>
+    <div class="code-block">
+      <div class="code-header"><div class="code-lang"><div class="code-lang-dot"></div>Terminal (from waygo/ root)</div><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+      <pre><span class="cm"># Make sure you are in the waygo/ root folder</span>
+npm create vite@latest frontend -- --template react
+cd frontend
+npm install</pre>
+    </div>
+  </div>
+
+  <div class="step-box">
+    <div class="step-header"><div class="step-num">2</div><div><div class="step-title">Install frontend dependencies</div></div></div>
+    <div class="code-block">
+      <div class="code-header"><div class="code-lang"><div class="code-lang-dot"></div>Terminal (inside frontend/)</div><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+      <pre>npm install axios react-router-dom framer-motion lucide-react</pre>
+    </div>
+    <div class="pkg-grid">
+      <div class="pkg-card"><div class="pkg-name">axios</div><div class="pkg-desc">HTTP client to call our backend API</div></div>
+      <div class="pkg-card"><div class="pkg-name">react-router-dom</div><div class="pkg-desc">Navigation between steps/pages</div></div>
+      <div class="pkg-card"><div class="pkg-name">framer-motion</div><div class="pkg-desc">Beautiful animations between steps</div></div>
+      <div class="pkg-card"><div class="pkg-name">lucide-react</div><div class="pkg-desc">Icon library (MapPin, Car, Train etc)</div></div>
+    </div>
+  </div>
+
+  <div class="step-box">
+    <div class="step-header"><div class="step-num">3</div><div><div class="step-title">Create frontend .env</div><div class="step-desc">In frontend/ folder root</div></div></div>
+    <div class="code-block">
+      <div class="code-header"><div class="code-lang"><div class="code-lang-dot" style="background:var(--purple)"></div>frontend/.env</div><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+      <pre>VITE_API_URL=http://localhost:5000/api
+VITE_GOOGLE_MAPS_KEY=YOUR_GOOGLE_MAPS_API_KEY_HERE</pre>
+    </div>
+  </div>
+
+  <div class="step-box">
+    <div class="step-header"><div class="step-num">4</div><div><div class="step-title">Create folder structure</div><div class="step-desc">Run these commands from inside frontend/src/</div></div></div>
+    <div class="code-block">
+      <div class="code-header"><div class="code-lang"><div class="code-lang-dot"></div>Terminal</div><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+      <pre>mkdir context components pages</pre>
+    </div>
+  </div>
+
+  <div class="nav-btns">
+    <button class="nav-btn" onclick="showSection('backend-env')">← .env Config</button>
+    <button class="nav-btn primary" onclick="showSection('frontend-app')">App.jsx →</button>
+  </div>
+</section>
+
+<!-- ============ APP.JSX ============ -->
+<section class="section" id="sec-frontend-app">
+  <h2>📱 src/App.jsx + index.css</h2>
+  <p>Replace the default <code>App.jsx</code> and <code>index.css</code> with these files:</p>
+
+  <div class="code-block">
+    <div class="code-header"><div class="code-lang"><div class="code-lang-dot" style="background:#61dafb"></div>src/App.jsx</div><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <pre><span class="imp">import</span> { <span class="var">BrowserRouter</span>, <span class="var">Routes</span>, <span class="var">Route</span>, <span class="var">Navigate</span> } <span class="imp">from</span> <span class="str">'react-router-dom'</span>;
+<span class="imp">import</span> { <span class="var">TravelProvider</span> } <span class="imp">from</span> <span class="str">'./context/TravelContext'</span>;
+<span class="imp">import</span> <span class="var">Header</span> <span class="imp">from</span> <span class="str">'./components/Header'</span>;
+<span class="imp">import</span> <span class="var">StepIndicator</span> <span class="imp">from</span> <span class="str">'./components/StepIndicator'</span>;
+<span class="imp">import</span> <span class="var">Step1_Route</span> <span class="imp">from</span> <span class="str">'./pages/Step1_Route'</span>;
+<span class="imp">import</span> <span class="var">Step2_Transport</span> <span class="imp">from</span> <span class="str">'./pages/Step2_Transport'</span>;
+<span class="imp">import</span> <span class="var">Step3_Costs</span> <span class="imp">from</span> <span class="str">'./pages/Step3_Costs'</span>;
+<span class="imp">import</span> <span class="var">Step4_Places</span> <span class="imp">from</span> <span class="str">'./pages/Step4_Places'</span>;
+<span class="imp">import</span> <span class="var">Step5_Summary</span> <span class="imp">from</span> <span class="str">'./pages/Step5_Summary'</span>;
+<span class="imp">import</span> <span class="str">'./index.css'</span>;
+
+<span class="kw">function</span> <span class="fn">App</span>() {
+  <span class="kw">return</span> (
+    <span class="tag">&lt;TravelProvider&gt;</span>
+      <span class="tag">&lt;BrowserRouter&gt;</span>
+        <span class="tag">&lt;div</span> <span class="attr">className</span>=<span class="str">"app-wrapper"</span><span class="tag">&gt;</span>
+          <span class="tag">&lt;Header /&gt;</span>
+          <span class="tag">&lt;StepIndicator /&gt;</span>
+          <span class="tag">&lt;main</span> <span class="attr">className</span>=<span class="str">"main-content"</span><span class="tag">&gt;</span>
+            <span class="tag">&lt;Routes&gt;</span>
+              <span class="tag">&lt;Route</span> <span class="attr">path</span>=<span class="str">"/"</span> <span class="attr">element</span>={<span class="tag">&lt;Navigate</span> <span class="attr">to</span>=<span class="str">"/step1"</span> <span class="attr">replace</span> <span class="tag">/&gt;</span>} <span class="tag">/&gt;</span>
+              <span class="tag">&lt;Route</span> <span class="attr">path</span>=<span class="str">"/step1"</span> <span class="attr">element</span>={<span class="tag">&lt;Step1_Route /&gt;</span>} <span class="tag">/&gt;</span>
+              <span class="tag">&lt;Route</span> <span class="attr">path</span>=<span class="str">"/step2"</span> <span class="attr">element</span>={<span class="tag">&lt;Step2_Transport /&gt;</span>} <span class="tag">/&gt;</span>
+              <span class="tag">&lt;Route</span> <span class="attr">path</span>=<span class="str">"/step3"</span> <span class="attr">element</span>={<span class="tag">&lt;Step3_Costs /&gt;</span>} <span class="tag">/&gt;</span>
+              <span class="tag">&lt;Route</span> <span class="attr">path</span>=<span class="str">"/step4"</span> <span class="attr">element</span>={<span class="tag">&lt;Step4_Places /&gt;</span>} <span class="tag">/&gt;</span>
+              <span class="tag">&lt;Route</span> <span class="attr">path</span>=<span class="str">"/step5"</span> <span class="attr">element</span>={<span class="tag">&lt;Step5_Summary /&gt;</span>} <span class="tag">/&gt;</span>
+            <span class="tag">&lt;/Routes&gt;</span>
+          <span class="tag">&lt;/main&gt;</span>
+        <span class="tag">&lt;/div&gt;</span>
+      <span class="tag">&lt;/BrowserRouter&gt;</span>
+    <span class="tag">&lt;/TravelProvider&gt;</span>
+  );
+}
+
+<span class="kw">export default</span> <span class="var">App</span>;</pre>
+  </div>
+
+  <h3>📄 src/index.css — Global Styles</h3>
+  <div class="code-block">
+    <div class="code-header"><div class="code-lang"><div class="code-lang-dot" style="background:#ff79c6"></div>src/index.css</div><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <pre><span class="attr">@import url</span>(<span class="str">'https://fonts.googleapis.com/css2?family=Clash+Display:wght@500;600;700&family=Syne:wght@500;700&family=DM+Sans:wght@300;400;500;600&display=swap'</span>);
+
+<span class="fn">:root</span> {
+  <span class="var">--bg</span>: <span class="num">#0a0a0f</span>;
+  <span class="var">--surface</span>: <span class="num">#13131a</span>;
+  <span class="var">--surface2</span>: <span class="num">#1c1c28</span>;
+  <span class="var">--border</span>: <span class="str">rgba(255,255,255,0.07)</span>;
+  <span class="var">--accent</span>: <span class="num">#f97316</span>;
+  <span class="var">--green</span>: <span class="num">#22c55e</span>;
+  <span class="var">--blue</span>: <span class="num">#38bdf8</span>;
+  <span class="var">--text</span>: <span class="num">#f1f0ff</span>;
+  <span class="var">--text-muted</span>: <span class="num">#7c7c9a</span>;
+}
+
+<span class="fn">*</span> { margin: <span class="num">0</span>; padding: <span class="num">0</span>; box-sizing: border-box; }
+
+<span class="fn">body</span> {
+  background: <span class="kw">var</span>(<span class="var">--bg</span>);
+  color: <span class="kw">var</span>(<span class="var">--text</span>);
+  font-family: <span class="str">'DM Sans'</span>, sans-serif;
+  min-height: <span class="num">100vh</span>;
+}
+
+<span class="fn">.app-wrapper</span> {
+  min-height: <span class="num">100vh</span>;
+  background:
+    radial-gradient(ellipse <span class="num">70%</span> <span class="num">50%</span> at <span class="num">20%</span> <span class="num">-10%</span>, <span class="str">rgba(249,115,22,0.10)</span> <span class="num">0%</span>, transparent <span class="num">60%</span>),
+    radial-gradient(ellipse <span class="num">60%</span> <span class="num">40%</span> at <span class="num">80%</span> <span class="num">110%</span>, <span class="str">rgba(56,189,248,0.07)</span> <span class="num">0%</span>, transparent <span class="num">50%</span>),
+    <span class="kw">var</span>(<span class="var">--bg</span>);
+}
+
+<span class="fn">.main-content</span> {
+  max-width: <span class="num">860px</span>;
+  margin: <span class="num">0</span> auto;
+  padding: <span class="num">0 20px 80px</span>;
+}
+
+<span class="cm">/* Card */</span>
+<span class="fn">.card</span> {
+  background: <span class="kw">var</span>(<span class="var">--surface</span>);
+  border: <span class="num">1px</span> solid <span class="kw">var</span>(<span class="var">--border</span>);
+  border-radius: <span class="num">20px</span>;
+  padding: <span class="num">32px</span>;
+  margin-bottom: <span class="num">20px</span>;
+}
+
+<span class="fn">.card-title</span> {
+  font-family: <span class="str">'Syne'</span>, sans-serif;
+  font-size: <span class="num">22px</span>;
+  font-weight: <span class="num">700</span>;
+  margin-bottom: <span class="num">4px</span>;
+  display: flex;
+  align-items: center;
+  gap: <span class="num">12px</span>;
+}
+
+<span class="fn">.card-icon</span> {
+  width: <span class="num">38px</span>; height: <span class="num">38px</span>;
+  background: <span class="str">rgba(249,115,22,0.12)</span>;
+  border-radius: <span class="num">10px</span>;
+  display: grid; place-items: center;
+  font-size: <span class="num">18px</span>;
+}
+
+<span class="fn">.card-subtitle</span> { color: <span class="kw">var</span>(<span class="var">--text-muted</span>); font-size: <span class="num">14px</span>; margin-bottom: <span class="num">28px</span>; }
+
+<span class="cm">/* Form */</span>
+<span class="fn">.form-grid</span> { display: grid; grid-template-columns: <span class="num">1fr 1fr</span>; gap: <span class="num">18px</span>; }
+<span class="fn">.form-grid.cols-3</span> { grid-template-columns: <span class="num">1fr 1fr 1fr</span>; }
+<span class="fn">.form-grid.cols-1</span> { grid-template-columns: <span class="num">1fr</span>; }
+
+<span class="fn">.field</span> { display: flex; flex-direction: column; gap: <span class="num">7px</span>; }
+
+<span class="fn">.field label</span> {
+  font-size: <span class="num">12px</span>; font-weight: <span class="num">600</span>;
+  color: <span class="kw">var</span>(<span class="var">--text-muted</span>);
+  text-transform: uppercase; letter-spacing: <span class="num">0.6px</span>;
+}
+
+<span class="fn">.field input</span>, <span class="fn">.field select</span> {
+  background: <span class="kw">var</span>(<span class="var">--surface2</span>);
+  border: <span class="num">1.5px</span> solid <span class="kw">var</span>(<span class="var">--border</span>);
+  border-radius: <span class="num">12px</span>;
+  padding: <span class="num">13px 15px</span>;
+  color: <span class="kw">var</span>(<span class="var">--text</span>);
+  font-family: <span class="str">'DM Sans'</span>, sans-serif;
+  font-size: <span class="num">15px</span>;
+  outline: none;
+  transition: all <span class="num">0.2s</span>;
+  width: <span class="num">100%</span>;
+}
+
+<span class="fn">.field input:focus</span>, <span class="fn">.field select:focus</span> {
+  border-color: <span class="kw">var</span>(<span class="var">--accent</span>);
+  box-shadow: <span class="num">0 0 0 3px</span> <span class="str">rgba(249,115,22,0.12)</span>;
+}
+
+<span class="fn">.field input::placeholder</span> { color: <span class="kw">var</span>(<span class="var">--text-muted</span>); }
+
+<span class="cm">/* Buttons */</span>
+<span class="fn">.btn</span> {
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: <span class="num">8px</span>; padding: <span class="num">13px 26px</span>; border-radius: <span class="num">12px</span>;
+  font-family: <span class="str">'DM Sans'</span>, sans-serif; font-size: <span class="num">15px</span>;
+  font-weight: <span class="num">600</span>; cursor: pointer; transition: all <span class="num">0.2s</span>;
+  border: none;
+}
+
+<span class="fn">.btn-primary</span> {
+  background: <span class="kw">var</span>(<span class="var">--accent</span>); color: white;
+  box-shadow: <span class="num">0 4px 20px</span> <span class="str">rgba(249,115,22,0.30)</span>;
+}
+<span class="fn">.btn-primary:hover</span> { transform: translateY(<span class="num">-1px</span>); box-shadow: <span class="num">0 8px 28px</span> <span class="str">rgba(249,115,22,0.40)</span>; }
+
+<span class="fn">.btn-outline</span> {
+  background: transparent; color: <span class="kw">var</span>(<span class="var">--text</span>);
+  border: <span class="num">1.5px</span> solid <span class="kw">var</span>(<span class="var">--border</span>);
+}
+<span class="fn">.btn-outline:hover</span> { border-color: <span class="kw">var</span>(<span class="var">--accent</span>); color: <span class="kw">var</span>(<span class="var">--accent</span>); }
+
+<span class="fn">.btn-green</span> { background: <span class="kw">var</span>(<span class="var">--green</span>); color: white; }
+<span class="fn">.btn-blue</span> { background: <span class="kw">var</span>(<span class="var">--blue</span>); color: <span class="num">#0a0a0f</span>; font-weight: <span class="num">700</span>; }
+
+<span class="fn">.actions</span> { display: flex; gap: <span class="num">12px</span>; justify-content: flex-end; margin-top: <span class="num">28px</span>; }
+
+<span class="cm">/* Transport cards */</span>
+<span class="fn">.transport-grid</span> { display: grid; grid-template-columns: repeat(<span class="num">3</span>, <span class="num">1fr</span>); gap: <span class="num">14px</span>; margin-bottom: <span class="num">24px</span>; }
+
+<span class="fn">.transport-card</span> {
+  background: <span class="kw">var</span>(<span class="var">--surface2</span>); border: <span class="num">2px</span> solid <span class="kw">var</span>(<span class="var">--border</span>);
+  border-radius: <span class="num">16px</span>; padding: <span class="num">24px 14px</span>;
+  text-align: center; cursor: pointer; transition: all <span class="num">0.2s</span>;
+}
+
+<span class="fn">.transport-card:hover</span> { border-color: <span class="str">rgba(249,115,22,0.4)</span>; transform: translateY(<span class="num">-2px</span>); }
+
+<span class="fn">.transport-card.selected</span> {
+  border-color: <span class="kw">var</span>(<span class="var">--accent</span>);
+  background: <span class="str">rgba(249,115,22,0.07)</span>;
+  box-shadow: <span class="num">0 0 0 1px</span> <span class="kw">var</span>(<span class="var">--accent</span>), <span class="num">0 8px 28px</span> <span class="str">rgba(249,115,22,0.14)</span>;
+}
+
+<span class="fn">.transport-icon</span> { font-size: <span class="num">36px</span>; display: block; margin-bottom: <span class="num">10px</span>; }
+<span class="fn">.transport-name</span> { font-weight: <span class="num">700</span>; font-size: <span class="num">15px</span>; }
+<span class="fn">.transport-desc</span> { font-size: <span class="num">12px</span>; color: <span class="kw">var</span>(<span class="var">--text-muted</span>); margin-top: <span class="num">4px</span>; }
+
+<span class="cm">/* Cost items */</span>
+<span class="fn">.cost-grid</span> { display: grid; grid-template-columns: <span class="num">1fr 1fr</span>; gap: <span class="num">14px</span>; }
+
+<span class="fn">.cost-item</span> {
+  background: <span class="kw">var</span>(<span class="var">--surface2</span>); border: <span class="num">1px</span> solid <span class="kw">var</span>(<span class="var">--border</span>);
+  border-radius: <span class="num">14px</span>; padding: <span class="num">18px</span>;
+}
+
+<span class="fn">.cost-label</span> { font-size: <span class="num">13px</span>; color: <span class="kw">var</span>(<span class="var">--text-muted</span>); margin-bottom: <span class="num">4px</span>; }
+
+<span class="fn">.cost-value</span> {
+  font-family: <span class="str">'Clash Display'</span>, sans-serif;
+  font-size: <span class="num">26px</span>; font-weight: <span class="num">700</span>; color: <span class="kw">var</span>(<span class="var">--accent</span>);
+}
+
+<span class="fn">.cost-total</span> {
+  background: <span class="str">linear-gradient(135deg, rgba(249,115,22,0.12), rgba(249,115,22,0.04))</span>;
+  border: <span class="num">1px</span> solid <span class="str">rgba(249,115,22,0.25)</span>;
+  border-radius: <span class="num">14px</span>; padding: <span class="num">22px 24px</span>;
+  grid-column: <span class="num">1 / -1</span>;
+  display: flex; align-items: center; justify-content: space-between;
+}
+
+<span class="fn">.cost-total-label</span> { font-family: <span class="str">'Syne'</span>, sans-serif; font-size: <span class="num">18px</span>; font-weight: <span class="num">700</span>; }
+<span class="fn">.cost-total-value</span> { font-family: <span class="str">'Clash Display'</span>, sans-serif; font-size: <span class="num">42px</span>; font-weight: <span class="num">700</span>; color: <span class="kw">var</span>(<span class="var">--accent</span>); }
+
+<span class="cm">/* Places */</span>
+<span class="fn">.places-tabs</span> {
+  display: flex; gap: <span class="num">4px</span>; background: <span class="kw">var</span>(<span class="var">--surface2</span>);
+  padding: <span class="num">4px</span>; border-radius: <span class="num">12px</span>; margin-bottom: <span class="num">22px</span>;
+}
+
+<span class="fn">.places-tab</span> {
+  flex: <span class="num">1</span>; padding: <span class="num">10px</span>; border-radius: <span class="num">8px</span>; text-align: center;
+  font-size: <span class="num">13px</span>; font-weight: <span class="num">500</span>; cursor: pointer;
+  border: none; background: none; color: <span class="kw">var</span>(<span class="var">--text-muted</span>);
+  font-family: <span class="str">'DM Sans'</span>, sans-serif; transition: all <span class="num">0.2s</span>;
+}
+
+<span class="fn">.places-tab.active</span> {
+  background: <span class="kw">var</span>(<span class="var">--surface</span>); color: <span class="kw">var</span>(<span class="var">--text</span>);
+  border: <span class="num">1px</span> solid <span class="kw">var</span>(<span class="var">--border</span>);
+}
+
+<span class="fn">.places-grid</span> { display: grid; grid-template-columns: <span class="num">1fr 1fr</span>; gap: <span class="num">14px</span>; }
+
+<span class="fn">.place-card</span> {
+  background: <span class="kw">var</span>(<span class="var">--surface2</span>); border: <span class="num">1px</span> solid <span class="kw">var</span>(<span class="var">--border</span>);
+  border-radius: <span class="num">14px</span>; padding: <span class="num">16px</span>; cursor: pointer; transition: all <span class="num">0.2s</span>;
+}
+
+<span class="fn">.place-card:hover</span> { border-color: <span class="str">rgba(249,115,22,0.3)</span>; transform: translateY(<span class="num">-2px</span>); }
+
+<span class="fn">.place-rating</span> {
+  background: <span class="str">rgba(249,115,22,0.1)</span>; padding: <span class="num">3px 10px</span>;
+  border-radius: <span class="num">20px</span>; font-size: <span class="num">13px</span>; font-weight: <span class="num">600</span>; color: <span class="kw">var</span>(<span class="var">--accent</span>);
+}
+
+<span class="cm">/* Summary */</span>
+<span class="fn">.summary-route</span> {
+  background: <span class="kw">var</span>(<span class="var">--surface2</span>); border-radius: <span class="num">16px</span>; padding: <span class="num">28px</span>;
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: <span class="num">20px</span>;
+}
+
+<span class="fn">.route-city-name</span> {
+  font-family: <span class="str">'Clash Display'</span>, sans-serif; font-size: <span class="num">32px</span>; font-weight: <span class="num">700</span>;
+}
+
+<span class="fn">.stat-grid</span> { display: grid; grid-template-columns: repeat(<span class="num">4</span>, <span class="num">1fr</span>); gap: <span class="num">12px</span>; }
+
+<span class="fn">.stat-box</span> {
+  background: <span class="kw">var</span>(<span class="var">--surface2</span>); border: <span class="num">1px</span> solid <span class="kw">var</span>(<span class="var">--border</span>);
+  border-radius: <span class="num">12px</span>; padding: <span class="num">14px</span>; text-align: center;
+}
+
+<span class="fn">.stat-value</span> { font-family: <span class="str">'Clash Display'</span>, sans-serif; font-size: <span class="num">22px</span>; font-weight: <span class="num">700</span>; }
+<span class="fn">.stat-label</span> { font-size: <span class="num">12px</span>; color: <span class="kw">var</span>(<span class="var">--text-muted</span>); margin-top: <span class="num">4px</span>; }
+
+<span class="fn">@media(max-width:640px)</span> {
+  <span class="fn">.form-grid</span> { grid-template-columns: <span class="num">1fr</span>; }
+  <span class="fn">.transport-grid</span> { grid-template-columns: <span class="num">1fr 1fr</span>; }
+  <span class="fn">.cost-grid</span> { grid-template-columns: <span class="num">1fr</span>; }
+  <span class="fn">.places-grid</span> { grid-template-columns: <span class="num">1fr</span>; }
+  <span class="fn">.stat-grid</span> { grid-template-columns: <span class="num">1fr 1fr</span>; }
+  <span class="fn">.card</span> { padding: <span class="num">22px 18px</span>; }
+}</pre>
+  </div>
+
+  <div class="nav-btns">
+    <button class="nav-btn" onclick="showSection('frontend-setup')">← Frontend Setup</button>
+    <button class="nav-btn primary" onclick="showSection('frontend-context')">TravelContext →</button>
+  </div>
+</section>
+
+<!-- ============ CONTEXT ============ -->
+<section class="section" id="sec-frontend-context">
+  <h2>🧠 context/TravelContext.jsx</h2>
+  <p>This is the global state manager. All 5 steps read and write to this shared state.</p>
+
+  <div class="code-block">
+    <div class="code-header"><div class="code-lang"><div class="code-lang-dot" style="background:#61dafb"></div>src/context/TravelContext.jsx</div><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <pre><span class="imp">import</span> { <span class="var">createContext</span>, <span class="var">useContext</span>, <span class="var">useState</span> } <span class="imp">from</span> <span class="str">'react'</span>;
+
+<span class="kw">const</span> <span class="var">TravelContext</span> = <span class="fn">createContext</span>(<span class="kw">null</span>);
+
+<span class="kw">export function</span> <span class="fn">TravelProvider</span>({ <span class="var">children</span> }) {
+  <span class="kw">const</span> [<span class="var">travel</span>, <span class="fn">setTravel</span>] = <span class="fn">useState</span>({
+    <span class="cm">// Step 1</span>
+    <span class="var">origin</span>: <span class="str">''</span>,
+    <span class="var">destination</span>: <span class="str">''</span>,
+    <span class="var">distance</span>: <span class="str">''</span>,
+    <span class="var">travelers</span>: <span class="num">1</span>,
+    <span class="var">travelDate</span>: <span class="str">''</span>,
+    <span class="var">returnDate</span>: <span class="str">''</span>,
+    <span class="cm">// Step 2</span>
+    <span class="var">transport</span>: <span class="str">''</span>,
+    <span class="var">mileage</span>: <span class="str">''</span>,
+    <span class="var">fuelPrice</span>: <span class="num">96</span>,
+    <span class="var">tollCharges</span>: <span class="num">0</span>,
+    <span class="var">selectedFareClass</span>: <span class="str">''</span>,
+    <span class="var">additionalCost</span>: <span class="num">0</span>,
+    <span class="cm">// Step 3</span>
+    <span class="var">costBreakdown</span>: <span class="kw">null</span>,
+    <span class="var">totalCost</span>: <span class="num">0</span>,
+    <span class="cm">// Step 4</span>
+    <span class="var">selectedPlaces</span>: [],
+    <span class="cm">// Step 5</span>
+    <span class="var">destCoords</span>: <span class="kw">null</span>
+  });
+
+  <span class="kw">const</span> <span class="fn">update</span> = (<span class="var">fields</span>) =>
+    <span class="fn">setTravel</span>(<span class="var">prev</span> => ({ ...<span class="var">prev</span>, ...<span class="var">fields</span> }));
+
+  <span class="kw">const</span> <span class="fn">reset</span> = () => <span class="fn">setTravel</span>({
+    <span class="var">origin</span>: <span class="str">''</span>, <span class="var">destination</span>: <span class="str">''</span>, <span class="var">distance</span>: <span class="str">''</span>, <span class="var">travelers</span>: <span class="num">1</span>,
+    <span class="var">travelDate</span>: <span class="str">''</span>, <span class="var">returnDate</span>: <span class="str">''</span>, <span class="var">transport</span>: <span class="str">''</span>, <span class="var">mileage</span>: <span class="str">''</span>,
+    <span class="var">fuelPrice</span>: <span class="num">96</span>, <span class="var">tollCharges</span>: <span class="num">0</span>, <span class="var">selectedFareClass</span>: <span class="str">''</span>,
+    <span class="var">additionalCost</span>: <span class="num">0</span>, <span class="var">costBreakdown</span>: <span class="kw">null</span>, <span class="var">totalCost</span>: <span class="num">0</span>,
+    <span class="var">selectedPlaces</span>: [], <span class="var">destCoords</span>: <span class="kw">null</span>
+  });
+
+  <span class="kw">return</span> (
+    <span class="tag">&lt;TravelContext.Provider</span> <span class="attr">value</span>={{ <span class="var">travel</span>, <span class="fn">update</span>, <span class="fn">reset</span> }}<span class="tag">&gt;</span>
+      {<span class="var">children</span>}
+    <span class="tag">&lt;/TravelContext.Provider&gt;</span>
+  );
+}
+
+<span class="cm">// Custom hook for easy access</span>
+<span class="kw">export const</span> <span class="fn">useTravel</span> = () => {
+  <span class="kw">const</span> <span class="var">ctx</span> = <span class="fn">useContext</span>(<span class="var">TravelContext</span>);
+  <span class="kw">if</span> (!<span class="var">ctx</span>) <span class="kw">throw new</span> <span class="fn">Error</span>(<span class="str">'useTravel must be inside TravelProvider'</span>);
+  <span class="kw">return</span> <span class="var">ctx</span>;
+};</pre>
+  </div>
+
+  <h3>📄 components/Header.jsx</h3>
+  <div class="code-block">
+    <div class="code-header"><div class="code-lang"><div class="code-lang-dot" style="background:#61dafb"></div>src/components/Header.jsx</div><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <pre><span class="imp">import</span> { <span class="var">useNavigate</span> } <span class="imp">from</span> <span class="str">'react-router-dom'</span>;
+<span class="imp">import</span> { <span class="var">useTravel</span> } <span class="imp">from</span> <span class="str">'../context/TravelContext'</span>;
+
+<span class="kw">export default function</span> <span class="fn">Header</span>() {
+  <span class="kw">const</span> <span class="var">navigate</span> = <span class="fn">useNavigate</span>();
+  <span class="kw">const</span> { <span class="fn">reset</span> } = <span class="fn">useTravel</span>();
+
+  <span class="kw">return</span> (
+    <span class="tag">&lt;header</span> <span class="attr">style</span>={{
+      display: <span class="str">'flex'</span>, alignItems: <span class="str">'center'</span>, justifyContent: <span class="str">'space-between'</span>,
+      padding: <span class="str">'20px 40px'</span>, borderBottom: <span class="str">'1px solid rgba(255,255,255,0.07)'</span>,
+      background: <span class="str">'rgba(10,10,15,0.85)'</span>, backdropFilter: <span class="str">'blur(20px)'</span>,
+      position: <span class="str">'sticky'</span>, top: <span class="num">0</span>, zIndex: <span class="num">100</span>, marginBottom: <span class="str">'32px'</span>
+    }}<span class="tag">&gt;</span>
+      <span class="tag">&lt;div</span> <span class="attr">style</span>={{ <span class="var">fontFamily</span>: <span class="str">'Clash Display, sans-serif'</span>, <span class="var">fontSize</span>: <span class="str">'26px'</span>, <span class="var">fontWeight</span>: <span class="num">700</span>, <span class="var">cursor</span>: <span class="str">'pointer'</span> }}
+           <span class="attr">onClick</span>={() => { <span class="fn">reset</span>(); <span class="fn">navigate</span>(<span class="str">'/step1'</span>); }}<span class="tag">&gt;</span>
+        Way<span class="tag">&lt;span</span> <span class="attr">style</span>={{ <span class="var">color</span>: <span class="str">'#f97316'</span> }}<span class="tag">&gt;</span>Go<span class="tag">&lt;/span&gt;</span>
+        <span class="tag">&lt;span</span> <span class="attr">style</span>={{ <span class="var">fontSize</span>: <span class="str">'11px'</span>, <span class="var">background</span>: <span class="str">'#f97316'</span>, <span class="var">color</span>: <span class="str">'white'</span>, <span class="var">padding</span>: <span class="str">'2px 8px'</span>, <span class="var">borderRadius</span>: <span class="str">'20px'</span>, <span class="var">marginLeft</span>: <span class="str">'8px'</span>, <span class="var">verticalAlign</span>: <span class="str">'middle'</span> }}<span class="tag">&gt;</span>BETA<span class="tag">&lt;/span&gt;</span>
+      <span class="tag">&lt;/div&gt;</span>
+      <span class="tag">&lt;span</span> <span class="attr">style</span>={{ <span class="var">fontSize</span>: <span class="str">'13px'</span>, <span class="var">color</span>: <span class="str">'#7c7c9a'</span> }}<span class="tag">&gt;</span>🌍 Smart Travel Planner<span class="tag">&lt;/span&gt;</span>
+    <span class="tag">&lt;/header&gt;</span>
+  );
+}</pre>
+  </div>
+
+  <h3>📄 components/StepIndicator.jsx</h3>
+  <div class="code-block">
+    <div class="code-header"><div class="code-lang"><div class="code-lang-dot" style="background:#61dafb"></div>src/components/StepIndicator.jsx</div><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <pre><span class="imp">import</span> { <span class="var">useLocation</span>, <span class="var">useNavigate</span> } <span class="imp">from</span> <span class="str">'react-router-dom'</span>;
+
+<span class="kw">const</span> <span class="var">STEPS</span> = [
+  { <span class="var">path</span>: <span class="str">'/step1'</span>, <span class="var">label</span>: <span class="str">'Route'</span> },
+  { <span class="var">path</span>: <span class="str">'/step2'</span>, <span class="var">label</span>: <span class="str">'Transport'</span> },
+  { <span class="var">path</span>: <span class="str">'/step3'</span>, <span class="var">label</span>: <span class="str">'Costs'</span> },
+  { <span class="var">path</span>: <span class="str">'/step4'</span>, <span class="var">label</span>: <span class="str">'Places'</span> },
+  { <span class="var">path</span>: <span class="str">'/step5'</span>, <span class="var">label</span>: <span class="str">'Summary'</span> },
+];
+
+<span class="kw">export default function</span> <span class="fn">StepIndicator</span>() {
+  <span class="kw">const</span> { <span class="var">pathname</span> } = <span class="fn">useLocation</span>();
+  <span class="kw">const</span> <span class="var">navigate</span> = <span class="fn">useNavigate</span>();
+  <span class="kw">const</span> <span class="var">currentStep</span> = <span class="fn">parseInt</span>(<span class="var">pathname</span>.<span class="fn">replace</span>(<span class="str">'/step'</span>, <span class="str">''</span>)) || <span class="num">1</span>;
+
+  <span class="kw">return</span> (
+    <span class="tag">&lt;div</span> <span class="attr">style</span>={{ display: <span class="str">'flex'</span>, alignItems: <span class="str">'center'</span>, justifyContent: <span class="str">'center'</span>, gap: <span class="num">0</span>, marginBottom: <span class="str">'36px'</span>, flexWrap: <span class="str">'wrap'</span> }}<span class="tag">&gt;</span>
+      {<span class="var">STEPS</span>.<span class="fn">map</span>((<span class="var">s</span>, <span class="var">i</span>) => {
+        <span class="kw">const</span> <span class="var">num</span> = <span class="var">i</span> + <span class="num">1</span>;
+        <span class="kw">const</span> <span class="var">isDone</span> = <span class="var">num</span> &lt; <span class="var">currentStep</span>;
+        <span class="kw">const</span> <span class="var">isActive</span> = <span class="var">num</span> === <span class="var">currentStep</span>;
+        <span class="kw">return</span> (
+          <span class="tag">&lt;div</span> <span class="attr">key</span>={<span class="var">s</span>.path} <span class="attr">style</span>={{ display: <span class="str">'flex'</span>, alignItems: <span class="str">'center'</span> }}<span class="tag">&gt;</span>
+            <span class="tag">&lt;div</span>
+              <span class="attr">onClick</span>={() => (<span class="var">isDone</span> || <span class="var">isActive</span>) && <span class="fn">navigate</span>(<span class="var">s</span>.path)}
+              <span class="attr">style</span>={{
+                display: <span class="str">'flex'</span>, alignItems: <span class="str">'center'</span>, gap: <span class="str">'8px'</span>,
+                padding: <span class="str">'8px 16px'</span>, borderRadius: <span class="str">'10px'</span>,
+                cursor: (<span class="var">isDone</span> || <span class="var">isActive</span>) ? <span class="str">'pointer'</span> : <span class="str">'default'</span>,
+                opacity: !<span class="var">isDone</span> && !<span class="var">isActive</span> ? <span class="num">0.35</span> : <span class="num">1</span>,
+                background: <span class="var">isActive</span> ? <span class="str">'rgba(249,115,22,0.1)'</span> : <span class="str">'transparent'</span>,
+              }}<span class="tag">&gt;</span>
+              <span class="tag">&lt;div</span> <span class="attr">style</span>={{
+                width: <span class="str">'26px'</span>, height: <span class="str">'26px'</span>, borderRadius: <span class="str">'7px'</span>,
+                background: <span class="var">isDone</span> ? <span class="str">'#22c55e'</span> : <span class="var">isActive</span> ? <span class="str">'#f97316'</span> : <span class="str">'rgba(255,255,255,0.07)'</span>,
+                display: <span class="str">'grid'</span>, placeItems: <span class="str">'center'</span>,
+                fontSize: <span class="str">'12px'</span>, fontWeight: <span class="str">'700'</span>, color: <span class="str">'white'</span>
+              }}<span class="tag">&gt;</span>{<span class="var">isDone</span> ? <span class="str">'✓'</span> : <span class="var">num</span>}<span class="tag">&lt;/div&gt;</span>
+              <span class="tag">&lt;span</span> <span class="attr">style</span>={{ fontSize: <span class="str">'13px'</span>, fontWeight: <span class="str">'500'</span>, color: <span class="var">isActive</span> ? <span class="str">'#f97316'</span> : <span class="str">'inherit'</span> }}<span class="tag">&gt;</span>{<span class="var">s</span>.label}<span class="tag">&lt;/span&gt;</span>
+            <span class="tag">&lt;/div&gt;</span>
+            {<span class="var">i</span> &lt; <span class="var">STEPS</span>.length - <span class="num">1</span> && <span class="tag">&lt;div</span> <span class="attr">style</span>={{ width: <span class="str">'28px'</span>, height: <span class="str">'1px'</span>, background: <span class="str">'rgba(255,255,255,0.1)'</span> }} <span class="tag">/&gt;</span>}
+          <span class="tag">&lt;/div&gt;</span>
+        );
+      })}
+    <span class="tag">&lt;/div&gt;</span>
+  );
+}</pre>
+  </div>
+
+  <div class="nav-btns">
+    <button class="nav-btn" onclick="showSection('frontend-app')">← App.jsx</button>
+    <button class="nav-btn primary" onclick="showSection('frontend-steps')">Step Components →</button>
+  </div>
+</section>
+
+<!-- ============ STEP COMPONENTS ============ -->
+<section class="section" id="sec-frontend-steps">
+  <h2>📋 Pages — All 5 Step Components</h2>
+
+  <h3>📄 pages/Step1_Route.jsx</h3>
+  <div class="code-block">
+    <div class="code-header"><div class="code-lang"><div class="code-lang-dot" style="background:#61dafb"></div>src/pages/Step1_Route.jsx</div><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <pre><span class="imp">import</span> { <span class="var">useState</span> } <span class="imp">from</span> <span class="str">'react'</span>;
+<span class="imp">import</span> { <span class="var">useNavigate</span> } <span class="imp">from</span> <span class="str">'react-router-dom'</span>;
+<span class="imp">import</span> { <span class="fn">useTravel</span> } <span class="imp">from</span> <span class="str">'../context/TravelContext'</span>;
+
+<span class="kw">export default function</span> <span class="fn">Step1_Route</span>() {
+  <span class="kw">const</span> <span class="var">navigate</span> = <span class="fn">useNavigate</span>();
+  <span class="kw">const</span> { <span class="var">travel</span>, <span class="fn">update</span> } = <span class="fn">useTravel</span>();
+  <span class="kw">const</span> [<span class="var">errors</span>, <span class="fn">setErrors</span>] = <span class="fn">useState</span>({});
+
+  <span class="kw">const</span> <span class="fn">validate</span> = () => {
+    <span class="kw">const</span> <span class="var">e</span> = {};
+    <span class="kw">if</span> (!<span class="var">travel</span>.origin.<span class="fn">trim</span>()) <span class="var">e</span>.origin = <span class="str">'Please enter origin city'</span>;
+    <span class="kw">if</span> (!<span class="var">travel</span>.destination.<span class="fn">trim</span>()) <span class="var">e</span>.destination = <span class="str">'Please enter destination'</span>;
+    <span class="kw">if</span> (!<span class="var">travel</span>.distance || <span class="var">travel</span>.distance <= <span class="num">0</span>) <span class="var">e</span>.distance = <span class="str">'Enter distance in km'</span>;
+    <span class="kw">if</span> (!<span class="var">travel</span>.travelDate) <span class="var">e</span>.travelDate = <span class="str">'Select travel date'</span>;
+    <span class="fn">setErrors</span>(<span class="var">e</span>);
+    <span class="kw">return</span> <span class="fn">Object.keys</span>(<span class="var">e</span>).length === <span class="num">0</span>;
+  };
+
+  <span class="kw">const</span> <span class="fn">handleNext</span> = () => {
+    <span class="kw">if</span> (<span class="fn">validate</span>()) <span class="fn">navigate</span>(<span class="str">'/step2'</span>);
+  };
+
+  <span class="kw">const</span> <span class="fn">Field</span> = ({ <span class="var">id</span>, <span class="var">label</span>, ...<span class="var">props</span> }) => (
+    <span class="tag">&lt;div</span> <span class="attr">className</span>=<span class="str">"field"</span><span class="tag">&gt;</span>
+      <span class="tag">&lt;label&gt;</span>{<span class="var">label</span>}<span class="tag">&lt;/label&gt;</span>
+      <span class="tag">&lt;input</span>
+        {<span class="var">...props</span>}
+        <span class="attr">value</span>={<span class="var">travel</span>[<span class="var">id</span>] || <span class="str">''</span>}
+        <span class="attr">onChange</span>={<span class="var">e</span> => <span class="fn">update</span>({ [<span class="var">id</span>]: <span class="var">e</span>.target.value })}
+        <span class="attr">style</span>={{ borderColor: <span class="var">errors</span>[<span class="var">id</span>] ? <span class="str">'#f85149'</span> : <span class="str">''</span> }}
+      <span class="tag">/&gt;</span>
+      {<span class="var">errors</span>[<span class="var">id</span>] && <span class="tag">&lt;span</span> <span class="attr">style</span>={{ color: <span class="str">'#f85149'</span>, fontSize: <span class="str">'12px'</span> }}<span class="tag">&gt;</span>{<span class="var">errors</span>[<span class="var">id</span>]}<span class="tag">&lt;/span&gt;</span>}
+    <span class="tag">&lt;/div&gt;</span>
+  );
+
+  <span class="kw">return</span> (
+    <span class="tag">&lt;div</span> <span class="attr">className</span>=<span class="str">"card"</span><span class="tag">&gt;</span>
+      <span class="tag">&lt;div</span> <span class="attr">className</span>=<span class="str">"card-title"</span><span class="tag">&gt;</span>
+        <span class="tag">&lt;div</span> <span class="attr">className</span>=<span class="str">"card-icon"</span><span class="tag">&gt;</span>📍<span class="tag">&lt;/div&gt;</span> Plan Your Route
+      <span class="tag">&lt;/div&gt;</span>
+      <span class="tag">&lt;p</span> <span class="attr">className</span>=<span class="str">"card-subtitle"</span><span class="tag">&gt;</span>Tell us where you are going<span class="tag">&lt;/p&gt;</span>
+
+      <span class="tag">&lt;div</span> <span class="attr">className</span>=<span class="str">"form-grid"</span><span class="tag">&gt;</span>
+        <span class="tag">&lt;Field</span> <span class="attr">id</span>=<span class="str">"origin"</span> <span class="attr">label</span>=<span class="str">"From (Origin)"</span> <span class="attr">placeholder</span>=<span class="str">"e.g. Ludhiana, Punjab"</span> <span class="tag">/&gt;</span>
+        <span class="tag">&lt;Field</span> <span class="attr">id</span>=<span class="str">"destination"</span> <span class="attr">label</span>=<span class="str">"To (Destination)"</span> <span class="attr">placeholder</span>=<span class="str">"e.g. Delhi, NCR"</span> <span class="tag">/&gt;</span>
+        <span class="tag">&lt;Field</span> <span class="attr">id</span>=<span class="str">"distance"</span> <span class="attr">label</span>=<span class="str">"Distance (km)"</span> <span class="attr">type</span>=<span class="str">"number"</span> <span class="attr">placeholder</span>=<span class="str">"e.g. 320"</span> <span class="tag">/&gt;</span>
+        <span class="tag">&lt;Field</span> <span class="attr">id</span>=<span class="str">"travelers"</span> <span class="attr">label</span>=<span class="str">"Number of Travelers"</span> <span class="attr">type</span>=<span class="str">"number"</span> <span class="attr">min</span>=<span class="str">"1"</span> <span class="attr">placeholder</span>=<span class="str">"1"</span> <span class="tag">/&gt;</span>
+        <span class="tag">&lt;Field</span> <span class="attr">id</span>=<span class="str">"travelDate"</span> <span class="attr">label</span>=<span class="str">"Travel Date"</span> <span class="attr">type</span>=<span class="str">"date"</span> <span class="tag">/&gt;</span>
+        <span class="tag">&lt;Field</span> <span class="attr">id</span>=<span class="str">"returnDate"</span> <span class="attr">label</span>=<span class="str">"Return Date (optional)"</span> <span class="attr">type</span>=<span class="str">"date"</span> <span class="tag">/&gt;</span>
+      <span class="tag">&lt;/div&gt;</span>
+
+      <span class="tag">&lt;div</span> <span class="attr">className</span>=<span class="str">"actions"</span><span class="tag">&gt;</span>
+        <span class="tag">&lt;button</span> <span class="attr">className</span>=<span class="str">"btn btn-primary"</span> <span class="attr">onClick</span>={<span class="var">handleNext</span>}<span class="tag">&gt;</span>
+          Continue → Transport
+        <span class="tag">&lt;/button&gt;</span>
+      <span class="tag">&lt;/div&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+  );
+}</pre>
+  </div>
+
+  <h3>📄 pages/Step2_Transport.jsx</h3>
+  <div class="code-block">
+    <div class="code-header"><div class="code-lang"><div class="code-lang-dot" style="background:#61dafb"></div>src/pages/Step2_Transport.jsx</div><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <pre><span class="imp">import</span> { <span class="var">useState</span>, <span class="var">useEffect</span> } <span class="imp">from</span> <span class="str">'react'</span>;
+<span class="imp">import</span> { <span class="var">useNavigate</span> } <span class="imp">from</span> <span class="str">'react-router-dom'</span>;
+<span class="imp">import</span> <span class="var">axios</span> <span class="imp">from</span> <span class="str">'axios'</span>;
+<span class="imp">import</span> { <span class="fn">useTravel</span> } <span class="imp">from</span> <span class="str">'../context/TravelContext'</span>;
+
+<span class="kw">const</span> <span class="var">TRANSPORT_OPTIONS</span> = [
+  { <span class="var">id</span>: <span class="str">'car'</span>, <span class="var">icon</span>: <span class="str">'🚗'</span>, <span class="var">name</span>: <span class="str">'Car'</span>, <span class="var">desc</span>: <span class="str">'Personal vehicle'</span> },
+  { <span class="var">id</span>: <span class="str">'bike'</span>, <span class="var">icon</span>: <span class="str">'🏍️'</span>, <span class="var">name</span>: <span class="str">'Bike'</span>, <span class="var">desc</span>: <span class="str">'Motorcycle/scooter'</span> },
+  { <span class="var">id</span>: <span class="str">'bus'</span>, <span class="var">icon</span>: <span class="str">'🚌'</span>, <span class="var">name</span>: <span class="str">'Bus'</span>, <span class="var">desc</span>: <span class="str">'State/private bus'</span> },
+  { <span class="var">id</span>: <span class="str">'train'</span>, <span class="var">icon</span>: <span class="str">'🚆'</span>, <span class="var">name</span>: <span class="str">'Train'</span>, <span class="var">desc</span>: <span class="str">'Indian Railways'</span> },
+  { <span class="var">id</span>: <span class="str">'flight'</span>, <span class="var">icon</span>: <span class="str">'✈️'</span>, <span class="var">name</span>: <span class="str">'Flight'</span>, <span class="var">desc</span>: <span class="str">'Air travel'</span> },
+  { <span class="var">id</span>: <span class="str">'cab'</span>, <span class="var">icon</span>: <span class="str">'🚕'</span>, <span class="var">name</span>: <span class="str">'Cab / Taxi'</span>, <span class="var">desc</span>: <span class="str">'Ola / Uber'</span> },
+];
+
+<span class="kw">export default function</span> <span class="fn">Step2_Transport</span>() {
+  <span class="kw">const</span> <span class="var">navigate</span> = <span class="fn">useNavigate</span>();
+  <span class="kw">const</span> { <span class="var">travel</span>, <span class="fn">update</span> } = <span class="fn">useTravel</span>();
+  <span class="kw">const</span> [<span class="var">fares</span>, <span class="fn">setFares</span>] = <span class="fn">useState</span>([]);
+  <span class="kw">const</span> [<span class="var">fuelPreview</span>, <span class="fn">setFuelPreview</span>] = <span class="fn">useState</span>(<span class="kw">null</span>);
+  <span class="kw">const</span> <span class="var">isPersonal</span> = [<span class="str">'car'</span>, <span class="str">'bike'</span>].<span class="fn">includes</span>(<span class="var">travel</span>.transport);
+  <span class="kw">const</span> <span class="var">isPublic</span> = [<span class="str">'bus'</span>, <span class="str">'train'</span>, <span class="str">'flight'</span>, <span class="str">'cab'</span>].<span class="fn">includes</span>(<span class="var">travel</span>.transport);
+
+  <span class="cm">// Fetch fares when public transport selected</span>
+  <span class="fn">useEffect</span>(() => {
+    <span class="kw">if</span> (!<span class="var">isPublic</span> || !<span class="var">travel</span>.transport) <span class="kw">return</span>;
+    <span class="var">axios</span>.<span class="fn">get</span>(
+      `${<span class="kw">import.meta.env</span>.<span class="var">VITE_API_URL</span>}/fares/estimate`,
+      { <span class="var">params</span>: { <span class="var">type</span>: <span class="var">travel</span>.transport, <span class="var">distance</span>: <span class="var">travel</span>.distance, <span class="var">travelers</span>: <span class="var">travel</span>.travelers } }
+    ).<span class="fn">then</span>(<span class="var">r</span> => <span class="fn">setFares</span>(<span class="var">r</span>.data.fares || []))
+     .<span class="fn">catch</span>(<span class="var">e</span> => <span class="var">console</span>.<span class="fn">error</span>(<span class="var">e</span>));
+  }, [<span class="var">travel</span>.transport]);
+
+  <span class="cm">// Live fuel calculation</span>
+  <span class="fn">useEffect</span>(() => {
+    <span class="kw">if</span> (<span class="var">isPersonal</span> && <span class="var">travel</span>.mileage && <span class="var">travel</span>.distance) {
+      <span class="kw">const</span> <span class="var">liters</span> = <span class="var">travel</span>.distance / <span class="var">travel</span>.mileage;
+      <span class="kw">const</span> <span class="var">cost</span> = <span class="fn">Math.round</span>(<span class="var">liters</span> * (<span class="var">travel</span>.fuelPrice || <span class="num">96</span>));
+      <span class="fn">setFuelPreview</span>({ <span class="var">liters</span>: <span class="var">liters</span>.<span class="fn">toFixed</span>(<span class="num">1</span>), <span class="var">cost</span> });
+    }
+  }, [<span class="var">travel</span>.mileage, <span class="var">travel</span>.fuelPrice, <span class="var">travel</span>.distance]);
+
+  <span class="kw">const</span> <span class="fn">handleNext</span> = () => {
+    <span class="kw">if</span> (!<span class="var">travel</span>.transport) { <span class="fn">alert</span>(<span class="str">'Please select a transport type!'</span>); <span class="kw">return</span>; }
+    <span class="kw">if</span> (<span class="var">isPersonal</span> && !<span class="var">travel</span>.mileage) { <span class="fn">alert</span>(<span class="str">'Please enter vehicle mileage!'</span>); <span class="kw">return</span>; }
+    <span class="fn">navigate</span>(<span class="str">'/step3'</span>);
+  };
+
+  <span class="kw">return</span> (
+    <span class="tag">&lt;div</span> <span class="attr">className</span>=<span class="str">"card"</span><span class="tag">&gt;</span>
+      <span class="tag">&lt;div</span> <span class="attr">className</span>=<span class="str">"card-title"</span><span class="tag">&gt;</span><span class="tag">&lt;div</span> <span class="attr">className</span>=<span class="str">"card-icon"</span><span class="tag">&gt;</span>🚗<span class="tag">&lt;/div&gt;</span> Choose Transport<span class="tag">&lt;/div&gt;</span>
+      <span class="tag">&lt;p</span> <span class="attr">className</span>=<span class="str">"card-subtitle"</span><span class="tag">&gt;</span>How are you travelling?<span class="tag">&lt;/p&gt;</span>
+
+      <span class="tag">&lt;div</span> <span class="attr">className</span>=<span class="str">"transport-grid"</span><span class="tag">&gt;</span>
+        {<span class="var">TRANSPORT_OPTIONS</span>.<span class="fn">map</span>((<span class="var">t</span>) => (
+          <span class="tag">&lt;div</span> <span class="attr">key</span>={<span class="var">t</span>.id}
+            <span class="attr">className</span>={`transport-card ${<span class="var">travel</span>.transport === <span class="var">t</span>.id ? <span class="str">'selected'</span> : <span class="str">''</span>}`}
+            <span class="attr">onClick</span>={() => <span class="fn">update</span>({ <span class="var">transport</span>: <span class="var">t</span>.id })}<span class="tag">&gt;</span>
+            <span class="tag">&lt;span</span> <span class="attr">className</span>=<span class="str">"transport-icon"</span><span class="tag">&gt;</span>{<span class="var">t</span>.icon}<span class="tag">&lt;/span&gt;</span>
+            <span class="tag">&lt;div</span> <span class="attr">className</span>=<span class="str">"transport-name"</span><span class="tag">&gt;</span>{<span class="var">t</span>.name}<span class="tag">&lt;/div&gt;</span>
+            <span class="tag">&lt;div</span> <span class="attr">className</span>=<span class="str">"transport-desc"</span><span class="tag">&gt;</span>{<span class="var">t</span>.desc}<span class="tag">&lt;/div&gt;</span>
+          <span class="tag">&lt;/div&gt;</span>
+        ))}
+      <span class="tag">&lt;/div&gt;</span>
+
+      {<span class="cm">/* Personal vehicle section */</span>}
+      {<span class="var">isPersonal</span> && (
+        <span class="tag">&lt;div</span> <span class="attr">style</span>={{ background: <span class="str">'rgba(249,115,22,0.05)'</span>, border: <span class="str">'1px solid rgba(249,115,22,0.12)'</span>, borderRadius: <span class="str">'14px'</span>, padding: <span class="str">'22px'</span> }}<span class="tag">&gt;</span>
+          <span class="tag">&lt;div</span> <span class="attr">style</span>={{ fontWeight: <span class="str">'700'</span>, marginBottom: <span class="str">'16px'</span> }}<span class="tag">&gt;</span>🔧 Vehicle Details<span class="tag">&lt;/div&gt;</span>
+          <span class="tag">&lt;div</span> <span class="attr">className</span>=<span class="str">"form-grid cols-3"</span><span class="tag">&gt;</span>
+            <span class="tag">&lt;div</span> <span class="attr">className</span>=<span class="str">"field"</span><span class="tag">&gt;</span>
+              <span class="tag">&lt;label&gt;</span>Mileage (km/L)<span class="tag">&lt;/label&gt;</span>
+              <span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="str">"number"</span> <span class="attr">placeholder</span>=<span class="str">"e.g. 18"</span>
+                <span class="attr">value</span>={<span class="var">travel</span>.mileage || <span class="str">''</span>}
+                <span class="attr">onChange</span>={<span class="var">e</span> => <span class="fn">update</span>({ <span class="var">mileage</span>: <span class="var">e</span>.target.value })} <span class="tag">/&gt;</span>
+            <span class="tag">&lt;/div&gt;</span>
+            <span class="tag">&lt;div</span> <span class="attr">className</span>=<span class="str">"field"</span><span class="tag">&gt;</span>
+              <span class="tag">&lt;label&gt;</span>Fuel Price (₹/L)<span class="tag">&lt;/label&gt;</span>
+              <span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="str">"number"</span> <span class="attr">placeholder</span>=<span class="str">"96"</span>
+                <span class="attr">value</span>={<span class="var">travel</span>.fuelPrice || <span class="str">''</span>}
+                <span class="attr">onChange</span>={<span class="var">e</span> => <span class="fn">update</span>({ <span class="var">fuelPrice</span>: <span class="var">e</span>.target.value })} <span class="tag">/&gt;</span>
+            <span class="tag">&lt;/div&gt;</span>
+            <span class="tag">&lt;div</span> <span class="attr">className</span>=<span class="str">"field"</span><span class="tag">&gt;</span>
+              <span class="tag">&lt;label&gt;</span>Toll Charges (₹)<span class="tag">&lt;/label&gt;</span>
+              <span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="str">"number"</span> <span class="attr">placeholder</span>=<span class="str">"0"</span>
+                <span class="attr">value</span>={<span class="var">travel</span>.tollCharges || <span class="str">''</span>}
+                <span class="attr">onChange</span>={<span class="var">e</span> => <span class="fn">update</span>({ <span class="var">tollCharges</span>: <span class="var">e</span>.target.value })} <span class="tag">/&gt;</span>
+            <span class="tag">&lt;/div&gt;</span>
+          <span class="tag">&lt;/div&gt;</span>
+          {<span class="var">fuelPreview</span> && (
+            <span class="tag">&lt;div</span> <span class="attr">style</span>={{ marginTop: <span class="str">'14px'</span>, padding: <span class="str">'14px 18px'</span>, background: <span class="str">'var(--surface2)'</span>, borderRadius: <span class="str">'10px'</span>, display: <span class="str">'flex'</span>, justifyContent: <span class="str">'space-between'</span> }}<span class="tag">&gt;</span>
+              <span class="tag">&lt;span&gt;</span>⛽ Fuel needed: <strong>{<span class="var">fuelPreview</span>.liters}L</strong><span class="tag">&lt;/span&gt;</span>
+              <span class="tag">&lt;span&gt;</span>💰 Fuel cost: <strong style={{ color: <span class="str">'#f97316'</span> }}>₹{<span class="var">fuelPreview</span>.cost.<span class="fn">toLocaleString</span>()}</strong><span class="tag">&lt;/span&gt;</span>
+            <span class="tag">&lt;/div&gt;</span>
+          )}
+        <span class="tag">&lt;/div&gt;</span>
+      )}
+
+      {<span class="cm">/* Public transport fares */</span>}
+      {<span class="var">isPublic</span> && <span class="var">fares</span>.length > <span class="num">0</span> && (
+        <span class="tag">&lt;div</span> <span class="attr">style</span>={{ marginTop: <span class="str">'20px'</span> }}<span class="tag">&gt;</span>
+          <span class="tag">&lt;div</span> <span class="attr">style</span>={{ fontWeight: <span class="str">'700'</span>, marginBottom: <span class="str">'14px'</span> }}<span class="tag">&gt;</span>🎫 Select Class &amp; Fare<span class="tag">&lt;/div&gt;</span>
+          {<span class="var">fares</span>.<span class="fn">map</span>(<span class="var">f</span> => (
+            <span class="tag">&lt;div</span> <span class="attr">key</span>={<span class="var">f</span>.key}
+              <span class="attr">onClick</span>={() => <span class="fn">update</span>({ <span class="var">selectedFareClass</span>: <span class="var">f</span>.key, <span class="var">fareEstimate</span>: <span class="var">f</span>.totalFare })}
+              <span class="attr">style</span>={{
+                display: <span class="str">'flex'</span>, alignItems: <span class="str">'center'</span>, justifyContent: <span class="str">'space-between'</span>,
+                padding: <span class="str">'16px 20px'</span>, marginBottom: <span class="str">'10px'</span>, borderRadius: <span class="str">'12px'</span>,
+                cursor: <span class="str">'pointer'</span>, border: <span class="str">'1.5px solid'</span>,
+                borderColor: <span class="var">travel</span>.selectedFareClass === <span class="var">f</span>.key ? <span class="str">'#38bdf8'</span> : <span class="str">'rgba(255,255,255,0.07)'</span>,
+                background: <span class="var">travel</span>.selectedFareClass === <span class="var">f</span>.key ? <span class="str">'rgba(56,189,248,0.07)'</span> : <span class="str">'var(--surface2)'</span>
+              }}<span class="tag">&gt;</span>
+              <span class="tag">&lt;div&gt;</span>
+                <span class="tag">&lt;div</span> <span class="attr">style</span>={{ fontWeight: <span class="str">'600'</span> }}<span class="tag">&gt;</span>{<span class="var">f</span>.icon} {<span class="var">f</span>.label}<span class="tag">&lt;/div&gt;</span>
+                <span class="tag">&lt;div</span> <span class="attr">style</span>={{ fontSize: <span class="str">'13px'</span>, color: <span class="str">'var(--text-muted)'</span> }}<span class="tag">&gt;</span>₹{<span class="var">f</span>.ratePerKm}/km × {<span class="var">travel</span>.distance}km × {<span class="var">travel</span>.travelers} person<span class="tag">&lt;/div&gt;</span>
+              <span class="tag">&lt;/div&gt;</span>
+              <span class="tag">&lt;div</span> <span class="attr">style</span>={{ fontFamily: <span class="str">'Clash Display,sans-serif'</span>, fontSize: <span class="str">'22px'</span>, color: <span class="str">'#38bdf8'</span>, fontWeight: <span class="str">'700'</span> }}<span class="tag">&gt;</span>
+                ₹{<span class="var">f</span>.totalFare.<span class="fn">toLocaleString</span>()}
+              <span class="tag">&lt;/div&gt;</span>
+            <span class="tag">&lt;/div&gt;</span>
+          ))}
+          <span class="tag">&lt;div</span> <span class="attr">className</span>=<span class="str">"field"</span> <span class="attr">style</span>={{ marginTop: <span class="str">'14px'</span> }}<span class="tag">&gt;</span>
+            <span class="tag">&lt;label&gt;</span>Extra Costs (porter, food, etc) ₹<span class="tag">&lt;/label&gt;</span>
+            <span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="str">"number"</span> <span class="attr">placeholder</span>=<span class="str">"0"</span>
+              <span class="attr">value</span>={<span class="var">travel</span>.additionalCost || <span class="str">''</span>}
+              <span class="attr">onChange</span>={<span class="var">e</span> => <span class="fn">update</span>({ <span class="var">additionalCost</span>: <span class="var">e</span>.target.value })} <span class="tag">/&gt;</span>
+          <span class="tag">&lt;/div&gt;</span>
+        <span class="tag">&lt;/div&gt;</span>
+      )}
+
+      <span class="tag">&lt;div</span> <span class="attr">className</span>=<span class="str">"actions"</span><span class="tag">&gt;</span>
+        <span class="tag">&lt;button</span> <span class="attr">className</span>=<span class="str">"btn btn-outline"</span> <span class="attr">onClick</span>={() => <span class="fn">navigate</span>(<span class="str">'/step1'</span>)}<span class="tag">&gt;</span>← Back<span class="tag">&lt;/button&gt;</span>
+        <span class="tag">&lt;button</span> <span class="attr">className</span>=<span class="str">"btn btn-primary"</span> <span class="attr">onClick</span>={<span class="var">handleNext</span>}<span class="tag">&gt;</span>Continue → Costs<span class="tag">&lt;/button&gt;</span>
+      <span class="tag">&lt;/div&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+  );
+}</pre>
+  </div>
+
+  <h3>📄 pages/Step3_Costs.jsx</h3>
+  <div class="code-block">
+    <div class="code-header"><div class="code-lang"><div class="code-lang-dot" style="background:#61dafb"></div>src/pages/Step3_Costs.jsx</div><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <pre><span class="imp">import</span> { <span class="var">useEffect</span>, <span class="var">useState</span> } <span class="imp">from</span> <span class="str">'react'</span>;
+<span class="imp">import</span> { <span class="var">useNavigate</span> } <span class="imp">from</span> <span class="str">'react-router-dom'</span>;
+<span class="imp">import</span> <span class="var">axios</span> <span class="imp">from</span> <span class="str">'axios'</span>;
+<span class="imp">import</span> { <span class="fn">useTravel</span> } <span class="imp">from</span> <span class="str">'../context/TravelContext'</span>;
+
+<span class="kw">export default function</span> <span class="fn">Step3_Costs</span>() {
+  <span class="kw">const</span> <span class="var">navigate</span> = <span class="fn">useNavigate</span>();
+  <span class="kw">const</span> { <span class="var">travel</span>, <span class="fn">update</span> } = <span class="fn">useTravel</span>();
+  <span class="kw">const</span> [<span class="var">breakdown</span>, <span class="fn">setBreakdown</span>] = <span class="fn">useState</span>(<span class="kw">null</span>);
+  <span class="kw">const</span> [<span class="var">loading</span>, <span class="fn">setLoading</span>] = <span class="fn">useState</span>(<span class="kw">true</span>);
+  <span class="kw">const</span> <span class="var">isPersonal</span> = [<span class="str">'car'</span>, <span class="str">'bike'</span>].<span class="fn">includes</span>(<span class="var">travel</span>.transport);
+
+  <span class="fn">useEffect</span>(() => {
+    <span class="kw">const</span> <span class="fn">fetchCosts</span> = <span class="kw">async</span> () => {
+      <span class="kw">try</span> {
+        <span class="kw">if</span> (<span class="var">isPersonal</span>) {
+          <span class="kw">const</span> { <span class="var">data</span> } = <span class="kw">await</span> <span class="var">axios</span>.<span class="fn">post</span>(
+            `${<span class="kw">import.meta.env</span>.<span class="var">VITE_API_URL</span>}/fuel/calculate`,
+            {
+              <span class="var">distance</span>: +<span class="var">travel</span>.distance, <span class="var">mileage</span>: +<span class="var">travel</span>.mileage,
+              <span class="var">fuelPrice</span>: +<span class="var">travel</span>.fuelPrice, <span class="var">tollCharges</span>: +<span class="var">travel</span>.tollCharges,
+              <span class="var">travelers</span>: +<span class="var">travel</span>.travelers, <span class="var">vehicleType</span>: <span class="var">travel</span>.transport
+            }
+          );
+          <span class="fn">setBreakdown</span>(<span class="var">data</span>.breakdown);
+          <span class="fn">update</span>({ <span class="var">costBreakdown</span>: <span class="var">data</span>.breakdown, <span class="var">totalCost</span>: <span class="var">data</span>.breakdown.totalCost });
+        } <span class="kw">else</span> {
+          <span class="cm">// Public transport — compute from stored fareEstimate</span>
+          <span class="kw">const</span> <span class="var">fare</span> = <span class="var">travel</span>.fareEstimate || <span class="num">0</span>;
+          <span class="kw">const</span> <span class="var">food</span> = <span class="var">travel</span>.travelers * <span class="num">200</span>;
+          <span class="kw">const</span> <span class="var">extra</span> = +<span class="var">travel</span>.additionalCost || <span class="num">0</span>;
+          <span class="kw">const</span> <span class="var">total</span> = <span class="var">fare</span> + <span class="var">food</span> + <span class="var">extra</span>;
+          <span class="kw">const</span> <span class="var">bd</span> = {
+            <span class="var">transportFare</span>: <span class="var">fare</span>, <span class="var">foodCost</span>: <span class="var">food</span>,
+            <span class="var">additionalCost</span>: <span class="var">extra</span>, <span class="var">totalCost</span>: <span class="var">total</span>,
+            <span class="var">perPersonCost</span>: <span class="fn">Math.round</span>(<span class="var">total</span> / <span class="var">travel</span>.travelers)
+          };
+          <span class="fn">setBreakdown</span>(<span class="var">bd</span>);
+          <span class="fn">update</span>({ <span class="var">costBreakdown</span>: <span class="var">bd</span>, <span class="var">totalCost</span>: <span class="var">total</span> });
+        }
+      } <span class="kw">finally</span> { <span class="fn">setLoading</span>(<span class="kw">false</span>); }
+    };
+    <span class="fn">fetchCosts</span>();
+  }, []);
+
+  <span class="kw">const</span> <span class="var">items</span> = <span class="var">breakdown</span> ? (
+    <span class="var">isPersonal</span> ? [
+      { <span class="var">icon</span>: <span class="str">'⛽'</span>, <span class="var">label</span>: <span class="str">'Fuel Cost'</span>, <span class="var">value</span>: <span class="var">breakdown</span>.fuelCost, <span class="var">sub</span>: `${<span class="var">breakdown</span>.litersNeeded}L` },
+      { <span class="var">icon</span>: <span class="str">'🛣️'</span>, <span class="var">label</span>: <span class="str">'Toll Charges'</span>, <span class="var">value</span>: <span class="var">breakdown</span>.tollCharges, <span class="var">sub</span>: <span class="str">'Highway tolls'</span> },
+      { <span class="var">icon</span>: <span class="str">'🍔'</span>, <span class="var">label</span>: <span class="str">'Food & Drinks'</span>, <span class="var">value</span>: <span class="var">breakdown</span>.foodCost, <span class="var">sub</span>: <span class="str">'Estimated stops'</span> },
+      { <span class="var">icon</span>: <span class="str">'🅿️'</span>, <span class="var">label</span>: <span class="str">'Parking'</span>, <span class="var">value</span>: <span class="var">breakdown</span>.parkingCost, <span class="var">sub</span>: <span class="str">'Per stop'</span> },
+      { <span class="var">icon</span>: <span class="str">'🎒'</span>, <span class="var">label</span>: <span class="str">'Miscellaneous'</span>, <span class="var">value</span>: <span class="var">breakdown</span>.miscCost, <span class="var">sub</span>: <span class="str">'~8% buffer'</span> },
+    ] : [
+      { <span class="var">icon</span>: <span class="str">'🎫'</span>, <span class="var">label</span>: <span class="str">'Transport Fare'</span>, <span class="var">value</span>: <span class="var">breakdown</span>.transportFare, <span class="var">sub</span>: `${<span class="var">travel</span>.travelers} traveler(s)` },
+      { <span class="var">icon</span>: <span class="str">'🍔'</span>, <span class="var">label</span>: <span class="str">'Food & Snacks'</span>, <span class="var">value</span>: <span class="var">breakdown</span>.foodCost, <span class="var">sub</span>: <span class="str">'₹200/person'</span> },
+      { <span class="var">icon</span>: <span class="str">'➕'</span>, <span class="var">label</span>: <span class="str">'Additional'</span>, <span class="var">value</span>: <span class="var">breakdown</span>.additionalCost, <span class="var">sub</span>: <span class="str">'As entered'</span> },
+    ]
+  ) : [];
+
+  <span class="kw">return</span> (
+    <span class="tag">&lt;div</span> <span class="attr">className</span>=<span class="str">"card"</span><span class="tag">&gt;</span>
+      <span class="tag">&lt;div</span> <span class="attr">className</span>=<span class="str">"card-title"</span><span class="tag">&gt;</span><span class="tag">&lt;div</span> <span class="attr">className</span>=<span class="str">"card-icon"</span><span class="tag">&gt;</span>💰<span class="tag">&lt;/div&gt;</span> Cost Breakdown<span class="tag">&lt;/div&gt;</span>
+      <span class="tag">&lt;p</span> <span class="attr">className</span>=<span class="str">"card-subtitle"</span><span class="tag">&gt;</span>Full estimate for your journey<span class="tag">&lt;/p&gt;</span>
+
+      {<span class="var">loading</span> ? <span class="tag">&lt;div</span> <span class="attr">style</span>={{ textAlign: <span class="str">'center'</span>, padding: <span class="str">'40px'</span>, color: <span class="str">'var(--text-muted)'</span> }}<span class="tag">&gt;</span>⏳ Calculating costs...<span class="tag">&lt;/div&gt;</span> : (
+        <span class="tag">&lt;div</span> <span class="attr">className</span>=<span class="str">"cost-grid"</span><span class="tag">&gt;</span>
+          {<span class="var">items</span>.<span class="fn">filter</span>(<span class="var">i</span> => <span class="var">i</span>.value > <span class="num">0</span>).<span class="fn">map</span>(<span class="var">item</span> => (
+            <span class="tag">&lt;div</span> <span class="attr">key</span>={<span class="var">item</span>.label} <span class="attr">className</span>=<span class="str">"cost-item"</span><span class="tag">&gt;</span>
+              <span class="tag">&lt;div</span> <span class="attr">style</span>={{ fontSize: <span class="str">'24px'</span>, marginBottom: <span class="str">'6px'</span> }}<span class="tag">&gt;</span>{<span class="var">item</span>.icon}<span class="tag">&lt;/div&gt;</span>
+              <span class="tag">&lt;div</span> <span class="attr">className</span>=<span class="str">"cost-label"</span><span class="tag">&gt;</span>{<span class="var">item</span>.label}<span class="tag">&lt;/div&gt;</span>
+              <span class="tag">&lt;div</span> <span class="attr">className</span>=<span class="str">"cost-value"</span><span class="tag">&gt;</span>₹{<span class="var">item</span>.value.<span class="fn">toLocaleString</span>()}<span class="tag">&lt;/div&gt;</span>
+              <span class="tag">&lt;div</span> <span class="attr">style</span>={{ fontSize: <span class="str">'12px'</span>, color: <span class="str">'var(--text-muted)'</span> }}<span class="tag">&gt;</span>{<span class="var">item</span>.sub}<span class="tag">&lt;/div&gt;</span>
+            <span class="tag">&lt;/div&gt;</span>
+          ))}
+          {<span class="var">breakdown</span> && (
+            <span class="tag">&lt;div</span> <span class="attr">className</span>=<span class="str">"cost-total"</span><span class="tag">&gt;</span>
+              <span class="tag">&lt;div&gt;</span>
+                <span class="tag">&lt;div</span> <span class="attr">className</span>=<span class="str">"cost-total-label"</span><span class="tag">&gt;</span>💳 Total Estimated Cost<span class="tag">&lt;/div&gt;</span>
+                <span class="tag">&lt;div</span> <span class="attr">style</span>={{ fontSize: <span class="str">'13px'</span>, color: <span class="str">'var(--text-muted)'</span>, marginTop: <span class="str">'4px'</span> }}<span class="tag">&gt;</span>
+                  ₹{<span class="var">breakdown</span>.perPersonCost.<span class="fn">toLocaleString</span>()} per person
+                <span class="tag">&lt;/div&gt;</span>
+              <span class="tag">&lt;/div&gt;</span>
+              <span class="tag">&lt;div</span> <span class="attr">className</span>=<span class="str">"cost-total-value"</span><span class="tag">&gt;</span>₹{<span class="var">breakdown</span>.totalCost.<span class="fn">toLocaleString</span>()}<span class="tag">&lt;/div&gt;</span>
+            <span class="tag">&lt;/div&gt;</span>
+          )}
+        <span class="tag">&lt;/div&gt;</span>
+      )}
+
+      <span class="tag">&lt;div</span> <span class="attr">className</span>=<span class="str">"actions"</span><span class="tag">&gt;</span>
+        <span class="tag">&lt;button</span> <span class="attr">className</span>=<span class="str">"btn btn-outline"</span> <span class="attr">onClick</span>={() => <span class="fn">navigate</span>(<span class="str">'/step2'</span>)}<span class="tag">&gt;</span>← Back<span class="tag">&lt;/button&gt;</span>
+        <span class="tag">&lt;button</span> <span class="attr">className</span>=<span class="str">"btn btn-primary"</span> <span class="attr">onClick</span>={() => <span class="fn">navigate</span>(<span class="str">'/step4'</span>)}<span class="tag">&gt;</span>Find Places →<span class="tag">&lt;/button&gt;</span>
+      <span class="tag">&lt;/div&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+  );
+}</pre>
+  </div>
+
+  <h3>📄 pages/Step4_Places.jsx</h3>
+  <div class="code-block">
+    <div class="code-header"><div class="code-lang"><div class="code-lang-dot" style="background:#61dafb"></div>src/pages/Step4_Places.jsx</div><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <pre><span class="imp">import</span> { <span class="var">useEffect</span>, <span class="var">useState</span> } <span class="imp">from</span> <span class="str">'react'</span>;
+<span class="imp">import</span> { <span class="var">useNavigate</span> } <span class="imp">from</span> <span class="str">'react-router-dom'</span>;
+<span class="imp">import</span> <span class="var">axios</span> <span class="imp">from</span> <span class="str">'axios'</span>;
+<span class="imp">import</span> { <span class="fn">useTravel</span> } <span class="imp">from</span> <span class="str">'../context/TravelContext'</span>;
+
+<span class="kw">const</span> <span class="var">TABS</span> = [
+  { <span class="var">id</span>: <span class="str">'lodging'</span>, <span class="var">label</span>: <span class="str">'🏨 Hotels'</span> },
+  { <span class="var">id</span>: <span class="str">'restaurant'</span>, <span class="var">label</span>: <span class="str">'🍽️ Restaurants'</span> },
+  { <span class="var">id</span>: <span class="str">'gas_station'</span>, <span class="var">label</span>: <span class="str">'⛽ Petrol Pumps'</span> },
+  { <span class="var">id</span>: <span class="str">'shopping_mall'</span>, <span class="var">label</span>: <span class="str">'🛍️ Shopping'</span> },
+];
+
+<span class="kw">export default function</span> <span class="fn">Step4_Places</span>() {
+  <span class="kw">const</span> <span class="var">navigate</span> = <span class="fn">useNavigate</span>();
+  <span class="kw">const</span> { <span class="var">travel</span>, <span class="fn">update</span> } = <span class="fn">useTravel</span>();
+  <span class="kw">const</span> [<span class="var">activeTab</span>, <span class="fn">setActiveTab</span>] = <span class="fn">useState</span>(<span class="str">'lodging'</span>);
+  <span class="kw">const</span> [<span class="var">places</span>, <span class="fn">setPlaces</span>] = <span class="fn">useState</span>({});
+  <span class="kw">const</span> [<span class="var">loading</span>, <span class="fn">setLoading</span>] = <span class="fn">useState</span>(<span class="kw">false</span>);
+  <span class="kw">const</span> [<span class="var">coords</span>, <span class="fn">setCoords</span>] = <span class="fn">useState</span>(<span class="kw">null</span>);
+
+  <span class="cm">// Geocode destination first</span>
+  <span class="fn">useEffect</span>(() => {
+    <span class="kw">if</span> (!<span class="var">travel</span>.destination) <span class="kw">return</span>;
+    <span class="var">axios</span>.<span class="fn">get</span>(`${<span class="kw">import.meta.env</span>.<span class="var">VITE_API_URL</span>}/places/geocode?address=${<span class="fn">encodeURIComponent</span>(<span class="var">travel</span>.destination)}`)
+      .<span class="fn">then</span>(<span class="var">r</span> => {
+        <span class="kw">const</span> <span class="var">c</span> = { <span class="var">lat</span>: <span class="var">r</span>.data.lat, <span class="var">lng</span>: <span class="var">r</span>.data.lng };
+        <span class="fn">setCoords</span>(<span class="var">c</span>);
+        <span class="fn">update</span>({ <span class="var">destCoords</span>: <span class="var">c</span> });
+      })
+      .<span class="fn">catch</span>(() => {});
+  }, []);
+
+  <span class="cm">// Fetch places for active tab</span>
+  <span class="fn">useEffect</span>(() => {
+    <span class="kw">if</span> (!<span class="var">coords</span> || <span class="var">places</span>[<span class="var">activeTab</span>]) <span class="kw">return</span>;
+    <span class="fn">setLoading</span>(<span class="kw">true</span>);
+    <span class="var">axios</span>.<span class="fn">get</span>(`${<span class="kw">import.meta.env</span>.<span class="var">VITE_API_URL</span>}/places/nearby`, {
+      <span class="var">params</span>: { <span class="var">location</span>: `${<span class="var">coords</span>.lat},${<span class="var">coords</span>.lng}`, <span class="var">type</span>: <span class="var">activeTab</span>, <span class="var">radius</span>: <span class="num">5000</span> }
+    }).<span class="fn">then</span>(<span class="var">r</span> => <span class="fn">setPlaces</span>(<span class="var">p</span> => ({ ...<span class="var">p</span>, [<span class="var">activeTab</span>]: <span class="var">r</span>.data.places || [] })))
+      .<span class="fn">catch</span>(() => <span class="fn">setPlaces</span>(<span class="var">p</span> => ({ ...<span class="var">p</span>, [<span class="var">activeTab</span>]: [] })))
+      .<span class="fn">finally</span>(() => <span class="fn">setLoading</span>(<span class="kw">false</span>));
+  }, [<span class="var">activeTab</span>, <span class="var">coords</span>]);
+
+  <span class="kw">const</span> <span class="fn">openInMaps</span> = (<span class="var">name</span>) => {
+    <span class="var">window</span>.<span class="fn">open</span>(`https://www.google.com/maps/search/${<span class="fn">encodeURIComponent</span>(<span class="var">name</span> + <span class="str">' near '</span> + <span class="var">travel</span>.destination)}`, <span class="str">'_blank'</span>);
+  };
+
+  <span class="kw">const</span> <span class="var">priceStr</span> = (<span class="var">level</span>) => <span class="str">'₹'</span>.<span class="fn">repeat</span>(<span class="var">level</span> + <span class="num">1</span>);
+
+  <span class="kw">return</span> (
+    <span class="tag">&lt;div</span> <span class="attr">className</span>=<span class="str">"card"</span><span class="tag">&gt;</span>
+      <span class="tag">&lt;div</span> <span class="attr">className</span>=<span class="str">"card-title"</span><span class="tag">&gt;</span><span class="tag">&lt;div</span> <span class="attr">className</span>=<span class="str">"card-icon"</span><span class="tag">&gt;</span>🗺️<span class="tag">&lt;/div&gt;</span> Discover Places<span class="tag">&lt;/div&gt;</span>
+      <span class="tag">&lt;p</span> <span class="attr">className</span>=<span class="str">"card-subtitle"</span><span class="tag">&gt;</span>Hotels, restaurants, and more near {<span class="var">travel</span>.destination}<span class="tag">&lt;/p&gt;</span>
+
+      <span class="tag">&lt;div</span> <span class="attr">className</span>=<span class="str">"places-tabs"</span><span class="tag">&gt;</span>
+        {<span class="var">TABS</span>.<span class="fn">map</span>(<span class="var">t</span> => (
+          <span class="tag">&lt;button</span> <span class="attr">key</span>={<span class="var">t</span>.id} <span class="attr">className</span>={`places-tab ${<span class="var">activeTab</span> === <span class="var">t</span>.id ? <span class="str">'active'</span> : <span class="str">''</span>}`}
+            <span class="attr">onClick</span>={() => <span class="fn">setActiveTab</span>(<span class="var">t</span>.id)}<span class="tag">&gt;</span>{<span class="var">t</span>.label}<span class="tag">&lt;/button&gt;</span>
+        ))}
+      <span class="tag">&lt;/div&gt;</span>
+
+      {<span class="var">loading</span> && <span class="tag">&lt;div</span> <span class="attr">style</span>={{ textAlign: <span class="str">'center'</span>, padding: <span class="str">'40px'</span>, color: <span class="str">'var(--text-muted)'</span> }}<span class="tag">&gt;</span>⏳ Finding places...<span class="tag">&lt;/div&gt;</span>}
+
+      {!<span class="var">loading</span> && (
+        <span class="tag">&lt;div</span> <span class="attr">className</span>=<span class="str">"places-grid"</span><span class="tag">&gt;</span>
+          {(<span class="var">places</span>[<span class="var">activeTab</span>] || []).<span class="fn">map</span>(<span class="var">p</span> => (
+            <span class="tag">&lt;div</span> <span class="attr">key</span>={<span class="var">p</span>.id} <span class="attr">className</span>=<span class="str">"place-card"</span> <span class="attr">onClick</span>={() => <span class="fn">openInMaps</span>(<span class="var">p</span>.name)}<span class="tag">&gt;</span>
+              <span class="tag">&lt;div</span> <span class="attr">style</span>={{ display: <span class="str">'flex'</span>, justifyContent: <span class="str">'space-between'</span>, alignItems: <span class="str">'flex-start'</span>, marginBottom: <span class="str">'8px'</span> }}<span class="tag">&gt;</span>
+                <span class="tag">&lt;div&gt;</span>
+                  <span class="tag">&lt;div</span> <span class="attr">style</span>={{ fontWeight: <span class="str">'600'</span>, fontSize: <span class="str">'15px'</span> }}<span class="tag">&gt;</span>{<span class="var">p</span>.name}<span class="tag">&lt;/div&gt;</span>
+                  <span class="tag">&lt;div</span> <span class="attr">style</span>={{ fontSize: <span class="str">'12px'</span>, color: <span class="str">'var(--text-muted)'</span>, marginTop: <span class="str">'2px'</span> }}<span class="tag">&gt;</span>
+                    {<span class="var">p</span>.priceLevel != <span class="kw">null</span> ? <span class="fn">priceStr</span>(<span class="var">p</span>.priceLevel) : <span class="str">''</span>}
+                  <span class="tag">&lt;/div&gt;</span>
+                <span class="tag">&lt;/div&gt;</span>
+                {<span class="var">p</span>.rating > <span class="num">0</span> && <span class="tag">&lt;div</span> <span class="attr">className</span>=<span class="str">"place-rating"</span><span class="tag">&gt;</span>⭐ {<span class="var">p</span>.rating}<span class="tag">&lt;/div&gt;</span>}
+              <span class="tag">&lt;/div&gt;</span>
+              <span class="tag">&lt;div</span> <span class="attr">style</span>={{ fontSize: <span class="str">'13px'</span>, color: <span class="str">'var(--text-muted)'</span> }}<span class="tag">&gt;</span>📍 {<span class="var">p</span>.address}<span class="tag">&lt;/div&gt;</span>
+              {<span class="var">p</span>.isOpen != <span class="kw">null</span> && (
+                <span class="tag">&lt;div</span> <span class="attr">style</span>={{ fontSize: <span class="str">'12px'</span>, marginTop: <span class="str">'6px'</span>, color: <span class="var">p</span>.isOpen ? <span class="str">'#22c55e'</span> : <span class="str">'#f85149'</span> }}<span class="tag">&gt;</span>
+                  {<span class="var">p</span>.isOpen ? <span class="str">'● Open now'</span> : <span class="str">'● Closed'</span>}
+                <span class="tag">&lt;/div&gt;</span>
+              )}
+            <span class="tag">&lt;/div&gt;</span>
+          ))}
+          {!<span class="var">loading</span> && (<span class="var">places</span>[<span class="var">activeTab</span>] || []).length === <span class="num">0</span> && (
+            <span class="tag">&lt;div</span> <span class="attr">style</span>={{ gridColumn: <span class="str">'1/-1'</span>, textAlign: <span class="str">'center'</span>, padding: <span class="str">'32px'</span>, color: <span class="str">'var(--text-muted)'</span> }}<span class="tag">&gt;</span>
+              No places found. Check your Google API key in .env.
+            <span class="tag">&lt;/div&gt;</span>
+          )}
+        <span class="tag">&lt;/div&gt;</span>
+      )}
+
+      <span class="tag">&lt;div</span> <span class="attr">className</span>=<span class="str">"actions"</span><span class="tag">&gt;</span>
+        <span class="tag">&lt;button</span> <span class="attr">className</span>=<span class="str">"btn btn-outline"</span> <span class="attr">onClick</span>={() => <span class="fn">navigate</span>(<span class="str">'/step3'</span>)}<span class="tag">&gt;</span>← Back<span class="tag">&lt;/button&gt;</span>
+        <span class="tag">&lt;button</span> <span class="attr">className</span>=<span class="str">"btn btn-primary"</span> <span class="attr">onClick</span>={() => <span class="fn">navigate</span>(<span class="str">'/step5'</span>)}<span class="tag">&gt;</span>View Summary →<span class="tag">&lt;/button&gt;</span>
+      <span class="tag">&lt;/div&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+  );
+}</pre>
+  </div>
+
+  <h3>📄 pages/Step5_Summary.jsx</h3>
+  <div class="code-block">
+    <div class="code-header"><div class="code-lang"><div class="code-lang-dot" style="background:#61dafb"></div>src/pages/Step5_Summary.jsx</div><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <pre><span class="imp">import</span> { <span class="var">useNavigate</span> } <span class="imp">from</span> <span class="str">'react-router-dom'</span>;
+<span class="imp">import</span> { <span class="fn">useTravel</span> } <span class="imp">from</span> <span class="str">'../context/TravelContext'</span>;
+
+<span class="kw">export default function</span> <span class="fn">Step5_Summary</span>() {
+  <span class="kw">const</span> <span class="var">navigate</span> = <span class="fn">useNavigate</span>();
+  <span class="kw">const</span> { <span class="var">travel</span>, <span class="fn">reset</span> } = <span class="fn">useTravel</span>();
+
+  <span class="kw">const</span> <span class="fn">openMaps</span> = (<span class="var">type</span> = <span class="str">'directions'</span>) => {
+    <span class="kw">const</span> { <span class="var">origin</span>, <span class="var">destination</span>, <span class="var">transport</span> } = <span class="var">travel</span>;
+    <span class="kw">const</span> <span class="var">travelMode</span> = { <span class="var">car</span>: <span class="str">'driving'</span>, <span class="var">bike</span>: <span class="str">'driving'</span>, <span class="var">bus</span>: <span class="str">'transit'</span>, <span class="var">train</span>: <span class="str">'transit'</span>, <span class="var">cab</span>: <span class="str">'driving'</span>, <span class="var">flight</span>: <span class="str">'driving'</span> }[<span class="var">transport</span>] || <span class="str">'driving'</span>;
+    <span class="kw">if</span> (<span class="var">type</span> === <span class="str">'directions'</span>) {
+      <span class="var">window</span>.<span class="fn">open</span>(`https://www.google.com/maps/dir/${<span class="fn">encodeURIComponent</span>(<span class="var">origin</span>)}/${<span class="fn">encodeURIComponent</span>(<span class="var">destination</span>)}/@?travelmode=${<span class="var">travelMode</span>}`, <span class="str">'_blank'</span>);
+    } <span class="kw">else</span> {
+      <span class="var">window</span>.<span class="fn">open</span>(`https://www.google.com/maps/search/${<span class="fn">encodeURIComponent</span>(<span class="var">type</span> + <span class="str">' near '</span> + <span class="var">destination</span>)}`, <span class="str">'_blank'</span>);
+    }
+  };
+
+  <span class="kw">const</span> <span class="var">transportNames</span> = { <span class="var">car</span>: <span class="str">'🚗 Car'</span>, <span class="var">bike</span>: <span class="str">'🏍️ Bike'</span>, <span class="var">bus</span>: <span class="str">'🚌 Bus'</span>, <span class="var">train</span>: <span class="str">'🚆 Train'</span>, <span class="var">flight</span>: <span class="str">'✈️ Flight'</span>, <span class="var">cab</span>: <span class="str">'🚕 Cab'</span> };
+  <span class="kw">const</span> <span class="var">nights</span> = <span class="var">travel</span>.returnDate && <span class="var">travel</span>.travelDate
+    ? <span class="fn">Math.ceil</span>((<span class="kw">new</span> <span class="fn">Date</span>(<span class="var">travel</span>.returnDate) - <span class="kw">new</span> <span class="fn">Date</span>(<span class="var">travel</span>.travelDate)) / (<span class="num">1000</span>*<span class="num">3600</span>*<span class="num">24</span>)) : <span class="num">0</span>;
+
+  <span class="kw">return</span> (
+    <span class="tag">&lt;div</span> <span class="attr">className</span>=<span class="str">"card"</span><span class="tag">&gt;</span>
+      <span class="tag">&lt;div</span> <span class="attr">className</span>=<span class="str">"card-title"</span><span class="tag">&gt;</span><span class="tag">&lt;div</span> <span class="attr">className</span>=<span class="str">"card-icon"</span><span class="tag">&gt;</span>🧭<span class="tag">&lt;/div&gt;</span> Journey Summary<span class="tag">&lt;/div&gt;</span>
+      <span class="tag">&lt;p</span> <span class="attr">className</span>=<span class="str">"card-subtitle"</span><span class="tag">&gt;</span>Your complete travel plan<span class="tag">&lt;/p&gt;</span>
+
+      {<span class="cm">/* Route display */</span>}
+      <span class="tag">&lt;div</span> <span class="attr">className</span>=<span class="str">"summary-route"</span><span class="tag">&gt;</span>
+        <span class="tag">&lt;div</span> <span class="attr">style</span>={{ textAlign: <span class="str">'center'</span> }}<span class="tag">&gt;</span>
+          <span class="tag">&lt;div</span> <span class="attr">className</span>=<span class="str">"route-city-name"</span><span class="tag">&gt;</span>{<span class="var">travel</span>.origin || <span class="str">'---'</span>}<span class="tag">&lt;/div&gt;</span>
+          <span class="tag">&lt;div</span> <span class="attr">style</span>={{ fontSize: <span class="str">'12px'</span>, color: <span class="str">'var(--text-muted)'</span>, marginTop: <span class="str">'4px'</span>, textTransform: <span class="str">'uppercase'</span>, letterSpacing: <span class="str">'0.5px'</span> }}<span class="tag">&gt;</span>Departure<span class="tag">&lt;/div&gt;</span>
+        <span class="tag">&lt;/div&gt;</span>
+        <span class="tag">&lt;div</span> <span class="attr">style</span>={{ textAlign: <span class="str">'center'</span> }}<span class="tag">&gt;</span>
+          <span class="tag">&lt;div</span> <span class="attr">style</span>={{ fontSize: <span class="str">'28px'</span>, marginBottom: <span class="str">'6px'</span> }}<span class="tag">&gt;</span>→<span class="tag">&lt;/div&gt;</span>
+          <span class="tag">&lt;div</span> <span class="attr">style</span>={{ background: <span class="str">'rgba(249,115,22,0.12)'</span>, border: <span class="str">'1px solid rgba(249,115,22,0.2)'</span>, padding: <span class="str">'4px 14px'</span>, borderRadius: <span class="str">'20px'</span>, fontSize: <span class="str">'13px'</span>, color: <span class="str">'#f97316'</span> }}<span class="tag">&gt;</span>
+            {<span class="var">transportNames</span>[<span class="var">travel</span>.transport] || <span class="str">'---'</span>}
+          <span class="tag">&lt;/div&gt;</span>
+        <span class="tag">&lt;/div&gt;</span>
+        <span class="tag">&lt;div</span> <span class="attr">style</span>={{ textAlign: <span class="str">'center'</span> }}<span class="tag">&gt;</span>
+          <span class="tag">&lt;div</span> <span class="attr">className</span>=<span class="str">"route-city-name"</span><span class="tag">&gt;</span>{<span class="var">travel</span>.destination || <span class="str">'---'</span>}<span class="tag">&lt;/div&gt;</span>
+          <span class="tag">&lt;div</span> <span class="attr">style</span>={{ fontSize: <span class="str">'12px'</span>, color: <span class="str">'var(--text-muted)'</span>, marginTop: <span class="str">'4px'</span>, textTransform: <span class="str">'uppercase'</span>, letterSpacing: <span class="str">'0.5px'</span> }}<span class="tag">&gt;</span>Destination<span class="tag">&lt;/div&gt;</span>
+        <span class="tag">&lt;/div&gt;</span>
+      <span class="tag">&lt;/div&gt;</span>
+
+      {<span class="cm">/* Stats */</span>}
+      <span class="tag">&lt;div</span> <span class="attr">className</span>=<span class="str">"stat-grid"</span> <span class="attr">style</span>={{ marginBottom: <span class="str">'24px'</span> }}<span class="tag">&gt;</span>
+        {[
+          { <span class="var">v</span>: `${<span class="var">travel</span>.distance}km`, <span class="var">l</span>: <span class="str">'Distance'</span> },
+          { <span class="var">v</span>: <span class="var">travel</span>.travelers, <span class="var">l</span>: <span class="str">'Travelers'</span> },
+          { <span class="var">v</span>: `₹${(+<span class="var">travel</span>.totalCost || <span class="num">0</span>).<span class="fn">toLocaleString</span>()}`, <span class="var">l</span>: <span class="str">'Total Cost'</span> },
+          { <span class="var">v</span>: <span class="var">nights</span> > <span class="num">0</span> ? `${<span class="var">nights</span>} nights` : <span class="str">'Day trip'</span>, <span class="var">l</span>: <span class="str">'Duration'</span> },
+        ].<span class="fn">map</span>(<span class="var">s</span> => (
+          <span class="tag">&lt;div</span> <span class="attr">key</span>={<span class="var">s</span>.l} <span class="attr">className</span>=<span class="str">"stat-box"</span><span class="tag">&gt;</span>
+            <span class="tag">&lt;div</span> <span class="attr">className</span>=<span class="str">"stat-value"</span><span class="tag">&gt;</span>{<span class="var">s</span>.v}<span class="tag">&lt;/div&gt;</span>
+            <span class="tag">&lt;div</span> <span class="attr">className</span>=<span class="str">"stat-label"</span><span class="tag">&gt;</span>{<span class="var">s</span>.l}<span class="tag">&lt;/div&gt;</span>
+          <span class="tag">&lt;/div&gt;</span>
+        ))}
+      <span class="tag">&lt;/div&gt;</span>
+
+      {<span class="cm">/* Navigation buttons */</span>}
+      <span class="tag">&lt;div</span> <span class="attr">style</span>={{ display: <span class="str">'grid'</span>, gridTemplateColumns: <span class="str">'1fr 1fr'</span>, gap: <span class="str">'12px'</span>, marginBottom: <span class="str">'14px'</span> }}<span class="tag">&gt;</span>
+        <span class="tag">&lt;button</span> <span class="attr">className</span>=<span class="str">"btn btn-primary"</span> <span class="attr">onClick</span>={() => <span class="fn">openMaps</span>(<span class="str">'directions'</span>)}<span class="tag">&gt;</span>📍 Get Directions<span class="tag">&lt;/button&gt;</span>
+        <span class="tag">&lt;button</span> <span class="attr">className</span>=<span class="str">"btn btn-blue"</span> <span class="attr">onClick</span>={() => <span class="fn">openMaps</span>(<span class="str">'hotel'</span>)}<span class="tag">&gt;</span>🏨 Hotels Nearby<span class="tag">&lt;/button&gt;</span>
+        <span class="tag">&lt;button</span> <span class="attr">className</span>=<span class="str">"btn btn-outline"</span> <span class="attr">onClick</span>={() => <span class="fn">openMaps</span>(<span class="str">'restaurant'</span>)}<span class="tag">&gt;</span>🍽️ Restaurants<span class="tag">&lt;/button&gt;</span>
+        <span class="tag">&lt;button</span> <span class="attr">className</span>=<span class="str">"btn btn-outline"</span> <span class="attr">onClick</span>={() => <span class="fn">openMaps</span>(<span class="str">'petrol pump'</span>)}<span class="tag">&gt;</span>⛽ Petrol Pumps<span class="tag">&lt;/button&gt;</span>
+      <span class="tag">&lt;/div&gt;</span>
+
+      <span class="tag">&lt;div</span> <span class="attr">style</span>={{ textAlign: <span class="str">'center'</span>, background: <span class="str">'rgba(56,189,248,0.05)'</span>, border: <span class="str">'1px dashed rgba(56,189,248,0.2)'</span>, borderRadius: <span class="str">'16px'</span>, padding: <span class="str">'28px'</span>, marginTop: <span class="str">'8px'</span> }}<span class="tag">&gt;</span>
+        <span class="tag">&lt;p</span> <span class="attr">style</span>={{ color: <span class="str">'var(--text-muted)'</span>, marginBottom: <span class="str">'16px'</span> }}<span class="tag">&gt;</span>🗺️ Launch full turn-by-turn navigation<span class="tag">&lt;/p&gt;</span>
+        <span class="tag">&lt;button</span> <span class="attr">className</span>=<span class="str">"btn btn-green"</span> <span class="attr">style</span>={{ fontSize: <span class="str">'17px'</span>, padding: <span class="str">'16px 40px'</span> }} <span class="attr">onClick</span>={() => <span class="fn">openMaps</span>(<span class="str">'directions'</span>)}<span class="tag">&gt;</span>
+          🚀 Launch Navigation in Google Maps
+        <span class="tag">&lt;/button&gt;</span>
+      <span class="tag">&lt;/div&gt;</span>
+
+      <span class="tag">&lt;div</span> <span class="attr">className</span>=<span class="str">"actions"</span> <span class="attr">style</span>={{ marginTop: <span class="str">'24px'</span> }}<span class="tag">&gt;</span>
+        <span class="tag">&lt;button</span> <span class="attr">className</span>=<span class="str">"btn btn-outline"</span> <span class="attr">onClick</span>={() => <span class="fn">navigate</span>(<span class="str">'/step4'</span>)}<span class="tag">&gt;</span>← Back<span class="tag">&lt;/button&gt;</span>
+        <span class="tag">&lt;button</span> <span class="attr">className</span>=<span class="str">"btn btn-outline"</span> <span class="attr">onClick</span>={() => { <span class="fn">reset</span>(); <span class="fn">navigate</span>(<span class="str">'/step1'</span>); }}<span class="tag">&gt;</span>🔄 New Trip<span class="tag">&lt;/button&gt;</span>
+      <span class="tag">&lt;/div&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+  );
+}</pre>
+  </div>
+
+  <div class="nav-btns">
+    <button class="nav-btn" onclick="showSection('frontend-context')">← Context</button>
+    <button class="nav-btn primary" onclick="showSection('run')">Run the App →</button>
+  </div>
+</section>
+
+<!-- ============ CSS (already in App section) ============ -->
+<section class="section" id="sec-frontend-css">
+  <h2>🎨 Styles are in index.css</h2>
+  <p>All the CSS is already covered in the <strong>App.jsx section</strong>. The <code>index.css</code> file you created there contains all global styles, component styles (card, form, transport cards, cost items, places, summary).</p>
+  <div class="alert alert-success">
+    <span class="alert-icon">✅</span>
+    <div>You don't need to create any extra CSS files — everything is in <code>src/index.css</code> which you already wrote in the App.jsx section.</div>
+  </div>
+  <div class="nav-btns">
+    <button class="nav-btn" onclick="showSection('frontend-steps')">← Step Components</button>
+    <button class="nav-btn primary" onclick="showSection('run')">Run the App →</button>
+  </div>
+</section>
+
+<!-- ============ RUN ============ -->
+<section class="section" id="sec-run">
+  <h2>🚀 Run the App</h2>
+  <p>You need <strong>two terminal windows</strong> open at the same time — one for backend, one for frontend.</p>
+
+  <div class="step-box">
+    <div class="step-header"><div class="step-num">1</div><div><div class="step-title">Terminal 1 — Start the Backend</div></div></div>
+    <div class="code-block">
+      <div class="code-header"><div class="code-lang"><div class="code-lang-dot"></div>Terminal 1</div><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+      <pre>cd waygo/backend
+npm run dev
+
+<span class="cm"># Should show:</span>
+<span class="cm"># ✅ WayGo server running on http://localhost:5000</span></pre>
+    </div>
+  </div>
+
+  <div class="step-box">
+    <div class="step-header"><div class="step-num">2</div><div><div class="step-title">Terminal 2 — Start the Frontend</div></div></div>
+    <div class="code-block">
+      <div class="code-header"><div class="code-lang"><div class="code-lang-dot"></div>Terminal 2</div><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+      <pre>cd waygo/frontend
+npm run dev
+
+<span class="cm"># Should show:</span>
+<span class="cm"># ➜  Local:   http://localhost:5173/</span></pre>
+    </div>
+  </div>
+
+  <div class="step-box">
+    <div class="step-header"><div class="step-num">3</div><div><div class="step-title">Open in browser</div></div></div>
+    <div class="code-block">
+      <div class="code-header"><div class="code-lang"><div class="code-lang-dot"></div>Browser</div></div>
+      <pre>http://localhost:5173</pre>
+    </div>
+  </div>
+
+  <div class="alert alert-success">
+    <span class="alert-icon">🎉</span>
+    <div><strong>That's it!</strong> Your full-stack travel planner is running. Fill in the 5 steps and test it out! The Places tab works once you add your Google Maps API key.</div>
+  </div>
+
+  <h3>🔧 Common Errors & Fixes</h3>
+  <table>
+    <tr><th>Error</th><th>Fix</th></tr>
+    <tr><td>CORS error in browser</td><td>Make sure backend is running on port 5000</td></tr>
+    <tr><td>No places showing</td><td>Check GOOGLE_MAPS_API_KEY in backend/.env</td></tr>
+    <tr><td>"useTravel must be inside TravelProvider"</td><td>Make sure App.jsx wraps everything in &lt;TravelProvider&gt;</td></tr>
+    <tr><td>Vite error: cannot find module</td><td>Run npm install again inside frontend/</td></tr>
+    <tr><td>Port 5000 in use</td><td>Change PORT=5001 in backend/.env</td></tr>
+  </table>
+
+  <div class="nav-btns">
+    <button class="nav-btn" onclick="showSection('frontend-steps')">← Steps</button>
+    <button class="nav-btn primary" onclick="showSection('features')">Feature Summary →</button>
+  </div>
+</section>
+
+<!-- ============ FEATURES ============ -->
+<section class="section" id="sec-features">
+  <h2>✨ Feature Summary</h2>
+  <table>
+    <tr><th>Feature</th><th>Status</th><th>Where</th></tr>
+    <tr><td>Route input (From/To/Distance/Date)</td><td style="color:#22c55e">✅ Done</td><td>Step1_Route.jsx</td></tr>
+    <tr><td>Transport picker (6 modes)</td><td style="color:#22c55e">✅ Done</td><td>Step2_Transport.jsx</td></tr>
+    <tr><td>Fuel calculator (mileage-based)</td><td style="color:#22c55e">✅ Done</td><td>routes/fuel.js + Step2/3</td></tr>
+    <tr><td>Public transport fares (API)</td><td style="color:#22c55e">✅ Done</td><td>routes/fares.js</td></tr>
+    <tr><td>Full cost breakdown (itemized)</td><td style="color:#22c55e">✅ Done</td><td>Step3_Costs.jsx</td></tr>
+    <tr><td>Hotels/restaurants/petrol nearby</td><td style="color:#22c55e">✅ Done</td><td>Step4_Places.jsx + Google API</td></tr>
+    <tr><td>Journey summary page</td><td style="color:#22c55e">✅ Done</td><td>Step5_Summary.jsx</td></tr>
+    <tr><td>Google Maps directions</td><td style="color:#22c55e">✅ Done</td><td>Step5 openMaps()</td></tr>
+    <tr><td>Dark theme UI</td><td style="color:#22c55e">✅ Done</td><td>index.css</td></tr>
+    <tr><td>Step indicator navigation</td><td style="color:#22c55e">✅ Done</td><td>StepIndicator.jsx</td></tr>
+    <tr><td>Form validation</td><td style="color:#22c55e">✅ Done</td><td>Step1 validate()</td></tr>
+    <tr><td>Global state management</td><td style="color:#22c55e">✅ Done</td><td>TravelContext.jsx</td></tr>
+    <tr><td>Responsive (mobile)</td><td style="color:#22c55e">✅ Done</td><td>index.css @media</td></tr>
+  </table>
+
+  <div class="alert alert-tip">
+    <span class="alert-icon">🚀</span>
+    <div><strong>Want to go further?</strong> You could add: user login (JWT), trip history (MongoDB), real-time fuel prices, WhatsApp share button, PDF trip summary export, or weather forecast for destination.</div>
+  </div>
+
+  <div class="nav-btns">
+    <button class="nav-btn" onclick="showSection('run')">← Run the App</button>
+    <button class="nav-btn primary" onclick="showSection('overview')">Back to Start 🏠</button>
+  </div>
+</section>
+
+</main>
+</div>
+
+<script>
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const sec = document.getElementById('sec-' + id);
+  if (sec) sec.classList.add('active');
+  const navs = document.querySelectorAll('.nav-item');
+  navs.forEach(n => {
+    if (n.getAttribute('onclick') && n.getAttribute('onclick').includes(id)) {
+      n.classList.add('active');
+    }
+  });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function copyCode(btn) {
+  const pre = btn.closest('.code-block').querySelector('pre');
+  const text = pre.innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = 'Copy';
+      btn.classList.remove('copied');
+    }, 2000);
+  });
+}
+</script>
+</body>
+</html>

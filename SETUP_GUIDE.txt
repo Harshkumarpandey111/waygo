@@ -1,0 +1,286 @@
+# WayGo — Full Stack Travel Planner
+# COMPLETE SETUP GUIDE (VS Code)
+
+================================================================
+STEP 1: OPEN VS CODE TERMINAL
+================================================================
+Press Ctrl + ` (backtick) in VS Code to open the terminal.
+
+================================================================
+STEP 2: CREATE THE PROJECT FOLDER
+================================================================
+
+mkdir waygo
+cd waygo
+
+================================================================
+STEP 3: SET UP THE BACKEND (Node.js + Express)
+================================================================
+
+mkdir server
+cd server
+npm init -y
+
+# Install all backend dependencies:
+npm install express mongoose bcryptjs jsonwebtoken dotenv cors
+
+# Install dev tools:
+npm install --save-dev nodemon
+
+# Go back to root:
+cd ..
+
+================================================================
+STEP 4: SET UP THE FRONTEND (React + Vite)
+================================================================
+
+npm create vite@latest client -- --template react
+cd client
+
+# Install all frontend dependencies:
+npm install react-router-dom axios lucide-react
+
+# Install Tailwind CSS:
+npm install -D tailwindcss postcss autoprefixer
+npx tailwindcss init -p
+
+cd ..
+
+================================================================
+STEP 5: INSTALL ROOT DEPENDENCIES
+================================================================
+
+npm init -y
+npm install --save-dev concurrently
+
+================================================================
+STEP 6: COPY ALL THE FILES
+================================================================
+
+Copy every file from this ZIP exactly as shown below.
+The final folder structure should look like:
+
+waygo/
+├── package.json              ✅ (root - runs both servers)
+├── .gitignore
+│
+├── server/
+│   ├── package.json
+│   ├── server.js
+│   ├── .env
+│   ├── config/
+│   │   └── db.js
+│   ├── models/
+│   │   ├── User.js
+│   │   └── Trip.js
+│   ├── controllers/
+│   │   ├── authController.js
+│   │   ├── tripController.js
+│   │   └── placesController.js
+│   ├── middleware/
+│   │   ├── authMiddleware.js
+│   │   └── errorMiddleware.js
+│   ├── routes/
+│   │   ├── authRoutes.js
+│   │   ├── tripRoutes.js
+│   │   └── placesRoutes.js
+│   └── utils/
+│       └── costCalculator.js
+│
+└── client/
+    ├── package.json
+    ├── vite.config.js
+    ├── tailwind.config.js
+    ├── postcss.config.js
+    ├── index.html
+    └── src/
+        ├── main.jsx
+        ├── App.jsx
+        ├── index.css
+        ├── api/
+        │   └── axios.js
+        ├── context/
+        │   ├── AuthContext.jsx
+        │   └── PlannerContext.jsx
+        ├── utils/
+        │   └── calculations.js
+        ├── components/
+        │   ├── layout/
+        │   │   ├── Navbar.jsx
+        │   │   └── Footer.jsx
+        │   ├── planner/
+        │   │   ├── StepIndicator.jsx
+        │   │   ├── Step1Route.jsx
+        │   │   ├── Step2Transport.jsx
+        │   │   ├── Step3Costs.jsx
+        │   │   ├── Step4Places.jsx
+        │   │   └── Step5Summary.jsx
+        │   └── ui/
+        │       ├── Button.jsx
+        │       ├── Input.jsx
+        │       └── Card.jsx
+        └── pages/
+            ├── Home.jsx
+            ├── Planner.jsx
+            ├── Dashboard.jsx
+            ├── Login.jsx
+            └── Register.jsx
+
+================================================================
+STEP 7: SET UP .env FILE (IMPORTANT!)
+================================================================
+
+Create file: server/.env with this content:
+
+PORT=5000
+MONGO_URI=mongodb://localhost:27017/waygo
+JWT_SECRET=waygo_super_secret_jwt_key_change_in_production
+NODE_ENV=development
+
+================================================================
+STEP 8: INSTALL MONGODB
+================================================================
+
+Option A — MongoDB Community (local):
+  Download from: https://www.mongodb.com/try/download/community
+  Install and run. Default port is 27017.
+
+Option B — MongoDB Atlas (cloud, free):
+  1. Go to https://cloud.mongodb.com
+  2. Create a free cluster
+  3. Get your connection string
+  4. Replace MONGO_URI in .env with your Atlas URI:
+     MONGO_URI=mongodb+srv://<user>:<pass>@cluster.mongodb.net/waygo
+
+================================================================
+STEP 9: VERIFY package.json FILES
+================================================================
+
+ROOT package.json should have:
+{
+  "scripts": {
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "cd server && npm run dev",
+    "client": "cd client && npm run dev"
+  }
+}
+
+SERVER package.json scripts should have:
+{
+  "scripts": {
+    "dev": "nodemon server.js",
+    "start": "node server.js"
+  }
+}
+
+================================================================
+STEP 10: START THE APPLICATION
+================================================================
+
+# From the ROOT /waygo folder:
+npm run dev
+
+This starts BOTH:
+  ✅ Backend:  http://localhost:5000
+  ✅ Frontend: http://localhost:5173
+
+Open http://localhost:5173 in your browser.
+
+================================================================
+STEP 11: TEST THE API
+================================================================
+
+Test backend is running:
+  GET http://localhost:5000/api/health
+
+You should see:
+  { "status": "OK", "message": "WayGo API is running 🚀" }
+
+You can use Postman or Thunder Client (VS Code extension) to test:
+
+Register:  POST http://localhost:5000/api/auth/register
+Body: { "name": "Test User", "email": "test@test.com", "password": "123456" }
+
+Login:     POST http://localhost:5000/api/auth/login
+Body: { "email": "test@test.com", "password": "123456" }
+
+Get Trips: GET http://localhost:5000/api/trips
+Header: Authorization: Bearer <your_jwt_token>
+
+================================================================
+STEP 12: RECOMMENDED VS CODE EXTENSIONS
+================================================================
+
+Install these for a better experience:
+- ES7+ React/Redux/React-Native snippets
+- Tailwind CSS IntelliSense
+- MongoDB for VS Code
+- Thunder Client (API testing)
+- Prettier - Code formatter
+- Auto Import - ES6
+
+================================================================
+FEATURES BUILT
+================================================================
+
+✅ Landing page with feature highlights
+✅ 5-Step travel planner:
+   Step 1: Origin, destination, distance, travelers, dates
+   Step 2: Transport selection (car/bike/bus/train/flight/cab)
+           → Personal vehicle: mileage, fuel price, toll + live gauge
+           → Public transport: fare class, provider, per-person fare
+   Step 3: Full cost breakdown (fuel, toll, food, parking, fare, misc)
+           → Auto-saves trip to MongoDB if logged in
+   Step 4: Nearby places (hotels, restaurants, petrol pumps, shopping)
+           → Click any to open in Google Maps
+   Step 5: Journey summary + one-tap Google Maps navigation
+
+✅ User Authentication (JWT)
+   - Register / Login / Logout
+   - Protected routes
+   - Token persisted in localStorage
+
+✅ User Dashboard
+   - Stats (total trips, distance, money spent)
+   - Trip history with delete
+   - Direct navigation links per trip
+
+✅ REST API (Node.js + Express)
+   - POST /api/auth/register
+   - POST /api/auth/login
+   - GET /api/auth/me
+   - GET/POST/PUT/DELETE /api/trips
+   - GET /api/trips/stats
+   - GET /api/places/nearby
+   - GET /api/places/fuel-prices
+
+✅ MongoDB with Mongoose
+   - User model with hashed passwords
+   - Trip model with full cost breakdown
+   - Auto-update user stats on trip save/delete
+
+================================================================
+TROUBLESHOOTING
+================================================================
+
+❌ "Cannot connect to MongoDB"
+   → Make sure MongoDB is running
+   → Check your MONGO_URI in .env
+   → Try: mongod in a separate terminal
+
+❌ "Port 5000 already in use"
+   → Change PORT=5001 in .env
+   → Update vite.config.js proxy target to :5001
+
+❌ "Module not found" errors
+   → Run: npm install in /server AND /client separately
+
+❌ CORS errors in browser
+   → Check that vite.config.js proxy is set to http://localhost:5000
+   → Make sure server CORS allows http://localhost:5173
+
+❌ Tailwind not working
+   → Make sure content paths in tailwind.config.js include ./src/**/*.{js,jsx}
+   → Check that index.css has @tailwind directives at the top
+
+================================================================
