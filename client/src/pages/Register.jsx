@@ -55,16 +55,16 @@ export default function Register() {
           )}
 
           <form onSubmit={handleSubmit} className="space-y-5">
-            <Input label="Full Name" id="name" type="text" placeholder="Arjun Sharma"
+            <Input label="Full Name" id="name" type="text" placeholder="Enter your full name"
               value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })}
               error={errors.name} icon={<User size={15} />} />
-            <Input label="Email" id="email" type="email" placeholder="arjun@example.com"
+            <Input label="Email" id="email" type="email" placeholder="Enter your email"
               value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })}
               error={errors.email} icon={<Mail size={15} />} />
-            <Input label="Password" id="password" type="password" placeholder="Min 6 characters"
+            <Input label="Password" id="password" type="password" placeholder="Enter a password"
               value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })}
               error={errors.password} icon={<Lock size={15} />} />
-            <Input label="Confirm Password" id="confirm" type="password" placeholder="Re-enter password"
+            <Input label="Confirm Password" id="confirm" type="password" placeholder="Re-enter your password"
               value={form.confirm} onChange={(e) => setForm({ ...form, confirm: e.target.value })}
               error={errors.confirm} icon={<Lock size={15} />} />
 
