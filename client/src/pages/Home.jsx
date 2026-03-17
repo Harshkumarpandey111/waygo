@@ -644,7 +644,7 @@ export default function Home() {
           }}>BETA</span>
         </div>
         <p style={{ fontSize: '0.75rem', color: '#4b5563' }}>
-          Made with ❤️ for Indian travelers · © 2025 WayGo
+          Made with ❤️ for Indian travelers · © 2026 WayGo
         </p>
       </footer>
     </div>
