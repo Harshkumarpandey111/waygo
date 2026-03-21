@@ -398,6 +398,11 @@ export default function Home() {
     return () => window.removeEventListener('mousemove', onMove);
   }, []);
 
+  const goTo = (path) => {
+  window.scrollTo({ top: 0, behavior: "auto" });
+  navigate(path);
+};
+
   const features = [
     { icon: '🛣️', title: 'Smart Route Planning',    desc: 'Enter origin & destination — auto-fetch distance, route stops & famous places en route.',          color: 'bg-orange-500/15', delay: '0.1s' },
     { icon: '⛽', title: 'Live Fuel Prices',          desc: 'Real-time petrol, diesel & CNG prices for your city. State-wise data across 20+ Indian states.',    color: 'bg-yellow-500/15', delay: '0.2s' },
@@ -461,7 +466,7 @@ export default function Home() {
           {/* CTA buttons */}
           <div className="animate-fadeUp" style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', justifyContent: 'center', marginBottom: '3rem', animationDelay: '0.5s' }}>
             <button
-              onClick={() => navigate('/planner')}
+              onClick={() => user ? goTo('/planner') : goTo('/login')}
               className="glow-btn"
               style={{
                 padding: '1rem 2.5rem', borderRadius: '1rem', color: 'white', fontWeight: 700,
@@ -477,7 +482,7 @@ export default function Home() {
 
             {!user && (
               <button
-                onClick={() => navigate('/register')}
+                onClick={() => goTo('/register')}
                 style={{
                   padding: '1rem 2.5rem', borderRadius: '1rem', fontWeight: 700,
                   fontSize: '1.125rem', background: 'transparent', cursor: 'pointer',
@@ -492,7 +497,7 @@ export default function Home() {
             )}
             {user && (
               <button
-                onClick={() => navigate('/dashboard')}
+                onClick={() => goTo('/dashboard')}
                 style={{
                   padding: '1rem 2.5rem', borderRadius: '1rem', fontWeight: 700,
                   fontSize: '1.125rem', background: 'transparent', cursor: 'pointer',
@@ -509,7 +514,7 @@ export default function Home() {
 
           {/* Trust tags */}
           <div className="animate-fadeUp" style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '1.5rem', fontSize: '0.875rem', color: '#6b7280', animationDelay: '0.6s' }}>
-            {['✅ No signup needed','⚡ Instant calculations','🆓 Always free','📍 20+ Indian states'].map((b, i) => (
+            {['⚡ Instant calculations','🆓 Always free','📍 20+ Indian states'].map((b, i) => (
               <span key={i}>{b}</span>
             ))}
           </div>
@@ -590,7 +595,7 @@ export default function Home() {
               { icon: '✈️', name: 'Flight', color: '#a78bfa' },
               { icon: '🚕', name: 'Cab',    color: '#f43f5e' },
             ].map((t, i) => (
-              <div key={i} className="transport-tile" onClick={() => navigate('/planner')}>
+              <div key={i} className="transport-tile" onClick={() => goTo('/planner')}>
                 <span className="transport-tile-icon">{t.icon}</span>
                 <span style={{ fontSize: '0.75rem', fontWeight: 600, color: t.color }}>{t.name}</span>
               </div>
@@ -613,7 +618,7 @@ export default function Home() {
               Plan your next Indian adventure in under 2 minutes — for free.
             </p>
             <button
-              onClick={() => navigate('/planner')}
+              onClick={() => user ? goTo('/planner') : goTo('/login')}
               style={{
                 padding: '1.2rem 3rem', borderRadius: '1rem', color: 'white', fontWeight: 700,
                 fontSize: '1.2rem', background: 'linear-gradient(135deg, #f97316, #dc2626)',
@@ -626,27 +631,13 @@ export default function Home() {
               🚀 Plan My Trip Now
             </button>
             <p style={{ marginTop: '1rem', fontSize: '0.75rem', color: '#4b5563' }}>
-              No credit card · No signup required · 100% free
+              No credit card                   · 100% free
             </p>
           </div>
         </div>
       </section>
 
-      {/* ══════════ FOOTER ══════════ */}
-      <footer className="home-footer" style={{ position: 'relative', zIndex: 10, padding: '2.5rem 1.5rem', textAlign: 'center' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', marginBottom: '0.75rem' }}>
-          <span className="font-display" style={{ fontSize: '1.25rem', fontWeight: 700, color: 'white' }}>Way</span>
-          <span className="font-display" style={{ fontSize: '1.25rem', fontWeight: 700, color: '#f97316' }}>Go</span>
-          <span style={{
-            fontSize: '0.7rem', padding: '0.125rem 0.5rem', borderRadius: '9999px',
-            color: '#f97316', fontWeight: 600,
-            background: 'rgba(249,115,22,0.1)', border: '1px solid rgba(249,115,22,0.2)',
-          }}>BETA</span>
-        </div>
-        <p style={{ fontSize: '0.75rem', color: '#4b5563' }}>
-          Made with ❤️ for Indian travelers · © 2026 WayGo
-        </p>
-      </footer>
+      
     </div>
   );
 }

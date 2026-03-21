@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Mail, Lock, User, Navigation, ArrowRight } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import Button from '../components/ui/Button';
@@ -10,6 +10,10 @@ export default function Register() {
   const [errors, setErrors] = useState({});
   const { register, loading, error, clearError } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Where to go after register — default to planner
+  const from = location.state?.from || '/planner';
 
   const validate = () => {
     const e = {};
@@ -28,7 +32,7 @@ export default function Register() {
     clearError();
     if (!validate()) return;
     const result = await register(form.name, form.email, form.password);
-    if (result.success) navigate('/dashboard');
+    if (result.success) navigate(from, { replace: true });
   };
 
   return (
@@ -38,6 +42,8 @@ export default function Register() {
 
       <div className="w-full max-w-md relative">
         <div className="bg-[var(--surface)] border border-[var(--border)] rounded-3xl p-8 shadow-[var(--shadow-card)]">
+
+          {/* Logo */}
           <div className="flex items-center gap-2.5 mb-8">
             <div className="w-10 h-10 bg-accent rounded-xl flex items-center justify-center shadow-[0_0_20px_rgba(249,115,22,0.4)]">
               <Navigation size={18} className="text-white" />
@@ -55,16 +61,16 @@ export default function Register() {
           )}
 
           <form onSubmit={handleSubmit} className="space-y-5">
-            <Input label="Full Name" id="name" type="text" placeholder="Enter your full name"
+            <Input label="Full Name" id="name" type="text" placeholder="Your full name"
               value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })}
               error={errors.name} icon={<User size={15} />} />
-            <Input label="Email" id="email" type="email" placeholder="Enter your email"
+            <Input label="Email" id="email" type="email" placeholder="you@example.com"
               value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })}
               error={errors.email} icon={<Mail size={15} />} />
-            <Input label="Password" id="password" type="password" placeholder="Enter a password"
+            <Input label="Password" id="password" type="password" placeholder="Min 6 characters"
               value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })}
               error={errors.password} icon={<Lock size={15} />} />
-            <Input label="Confirm Password" id="confirm" type="password" placeholder="Re-enter your password"
+            <Input label="Confirm Password" id="confirm" type="password" placeholder="Re-enter password"
               value={form.confirm} onChange={(e) => setForm({ ...form, confirm: e.target.value })}
               error={errors.confirm} icon={<Lock size={15} />} />
 

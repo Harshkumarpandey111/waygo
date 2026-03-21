@@ -8,15 +8,17 @@ import Dashboard from './pages/Dashboard';
 import Login from './pages/Login';
 import Register from './pages/Register';
 
-// ✅ Only logged-in users can see this
+// ✅ Only logged-in users can access these pages
 function PrivateRoute({ children }) {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
+  if (loading) return null; // wait for auth to load
   return user ? children : <Navigate to="/login" replace />;
 }
 
-// ✅ Already logged in? Skip login/register pages
+// ✅ Already logged in? Redirect away from login/register
 function PublicOnlyRoute({ children }) {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
+  if (loading) return null;
   return user ? <Navigate to="/" replace /> : children;
 }
 
@@ -27,17 +29,27 @@ function AppLayout() {
       <main className="flex-1">
         <Routes>
 
-          {/* 🔒 Protected routes — must be logged in */}
-          <Route path="/" element={<PrivateRoute><Home /></PrivateRoute>} />
-          <Route path="/planner" element={<PrivateRoute><Planner /></PrivateRoute>} />
-          <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+          {/* 🌐 Public — anyone can see home page */}
+          <Route path="/" element={<Home />} />
 
-          {/* 🔓 Public only — redirect to home if already logged in */}
-          <Route path="/login" element={<PublicOnlyRoute><Login /></PublicOnlyRoute>} />
-          <Route path="/register" element={<PublicOnlyRoute><Register /></PublicOnlyRoute>} />
+          {/* 🔒 Protected — must be logged in */}
+          <Route path="/planner" element={
+            <PrivateRoute><Planner /></PrivateRoute>
+          } />
+          <Route path="/dashboard" element={
+            <PrivateRoute><Dashboard /></PrivateRoute>
+          } />
+
+          {/* 🔓 Auth pages — redirect to home if already logged in */}
+          <Route path="/login" element={
+            <PublicOnlyRoute><Login /></PublicOnlyRoute>
+          } />
+          <Route path="/register" element={
+            <PublicOnlyRoute><Register /></PublicOnlyRoute>
+          } />
 
           {/* Fallback */}
-          <Route path="*" element={<Navigate to="/login" replace />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
 
         </Routes>
       </main>
