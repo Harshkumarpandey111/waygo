@@ -360,7 +360,7 @@ function Counter({ target, suffix, label }) {
 
   return (
     <div ref={ref} style={{ textAlign: 'center' }}>
-      <div className="font-display" style={{ fontSize: '2.5rem', fontWeight: 900, color: 'white', marginBottom: '0.25rem' }}>
+      <div className="font-display" style={{ fontSize: 'clamp(1.4rem, 5vw, 2.5rem)', fontWeight: 900, color: 'white', marginBottom: '0.25rem' }}>
         {count.toLocaleString()}{suffix}
       </div>
       <div style={{ fontSize: '0.875rem', color: '#6b7280' }}>{label}</div>
@@ -528,7 +528,7 @@ export default function Home() {
 
       {/* ══════════ STATS BAR ══════════ */}
       <div className="stats-bar" style={{ position: 'relative', zIndex: 10, padding: '3rem 1.5rem' }}>
-        <div style={{ maxWidth: '56rem', margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '2rem' }}>
+        <div style={{ maxWidth: '56rem', margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem', padding: '0 1rem' }}>
           <Counter target={50000} suffix="+" label="Trips Planned"/>
           <Counter target={20}    suffix="+" label="Indian States"/>
           <Counter target={6}     suffix=""  label="Transport Modes"/>
@@ -586,7 +586,7 @@ export default function Home() {
             </h2>
             <p style={{ color: '#6b7280' }}>Detailed cost calculator for all 6 transport modes</p>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: '1rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }}>
             {[
               { icon: '🚗', name: 'Car',    color: '#f97316' },
               { icon: '🏍️', name: 'Bike',   color: '#fbbf24' },
