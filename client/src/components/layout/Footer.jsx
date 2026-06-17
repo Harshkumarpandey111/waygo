@@ -28,12 +28,12 @@ export default function Footer() {
               Harsh Kumar Pandey
             </p>
             <a
-              href="mailto:harshkumarpandey2005@gmail.com"
+              href="mailto:harshkumarpandey164@gmail.com"
               className="inline-flex items-center gap-2 text-sm text-[var(--text-muted)] hover:text-accent transition-colors duration-200"
               aria-label="Send email to Harsh Kumar Pandey"
             >
               <Mail size={14} />
-              harshkumarpandey2005@gmail.com
+              harshkumarpandey164@gmail.com
             </a>
           </div>
 
