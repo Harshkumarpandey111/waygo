@@ -93,6 +93,7 @@ function StepContent() {
 
   useEffect(() => {
     if (currentStep !== prevStep) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
       setVisible(false);
       setTimeout(() => {
         setPrevStep(currentStep);
